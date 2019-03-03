@@ -24,8 +24,8 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         public string MarketRating { get; set; }
         public List<Buddy> Buddies { get; set; }
         public List<Guild> Guilds { get; set; }
-        public List<TopItem> Top { get; set; }
-        public string TopDomain { get; set; }
+        public List<Item> Top { get; set; }
+        public List<Item> Hot { get; set; }
     }
 
     public class Buddy
@@ -41,7 +41,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         public string Name { get; set; }
     }
 
-    public class TopItem
+    public class Item
     {
         public string Rank { get; set; }
         public string Type { get; set; }

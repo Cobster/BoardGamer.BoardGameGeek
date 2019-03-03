@@ -15,7 +15,11 @@ namespace BoardGamer.BoardGameGeek.Tests
 
             IBoardGameGeekXmlApi2Client bgg = new BoardGameGeekXmlApi2Client(http);
 
-            User user = await bgg.GetUserAsync("jakefromstatefarm", buddies: true);
+            UserResponse response = await bgg.GetUserAsync(new UserRequest("jakefromstatefarm", buddies: true, hot: true, top: true));
+
+            Assert.True(response.Succeeded);
+
+            User user = response.User;
 
             Assert.NotNull(user);
             Assert.Equal("1266617", user.Id);
@@ -26,6 +30,8 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.Equal("Oregon", user.StateOrProvince);
             Assert.Equal("United States", user.Country);
             Assert.Equal(4, user.Buddies.Count);
+            Assert.Single(user.Top);
+            Assert.Single(user.Hot);
 
         }
     }

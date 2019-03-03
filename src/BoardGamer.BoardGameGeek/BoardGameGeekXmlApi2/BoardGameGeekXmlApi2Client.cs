@@ -8,8 +8,11 @@ using System.Xml.XPath;
 
 namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 {
+
     public class BoardGameGeekXmlApi2Client : IBoardGameGeekXmlApi2Client
     {
+        public static readonly Uri BaseUrl = new Uri("https://www.boardgamegeek.com/xmlapi2/");
+
         private readonly HttpClient http;
 
         public BoardGameGeekXmlApi2Client(HttpClient http)
@@ -17,32 +20,23 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             this.http = http;
         }
 
-        public async Task<User> GetUserAsync(string username, 
-            bool buddies = false, 
-            bool guilds = false, 
-            bool hot = false, 
-            bool top = false, 
-            string domain = null, 
-            int page = 1)
+        public async Task<UserResponse> GetUserAsync(UserRequest request)
         {
-            if (String.IsNullOrWhiteSpace(username))
-            {
-                throw new ArgumentException(nameof(username));
-            }
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
-            Uri requestUri = Api.User(username, buddies, guilds, hot, top, domain, page);
+            Uri requestUri = new Uri(BaseUrl, request.Url); //Api.User(username, buddies, guilds, hot, top, domain, page);
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-            HttpResponseMessage response = await this.http.SendAsync(request).ConfigureAwait(false);
+            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            HttpResponseMessage httpResponse = await this.http.SendAsync(httpRequest).ConfigureAwait(false);
 
-            if (!response.IsSuccessStatusCode)
+            if (!httpResponse.IsSuccessStatusCode)
             {
                 // error occured
                 // handle it
             }
 
             XDocument xdoc;
-            using (var contentStream = await response.Content.ReadAsStreamAsync())
+            using (var contentStream = await httpResponse.Content.ReadAsStreamAsync())
             {
                 xdoc = XDocument.Load(contentStream);
             }
@@ -67,61 +61,48 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                                           SteamAccount = GetAttributeValue(xuser.Element("steamaccount")),
                                           TradeRating = GetAttributeValue(xuser.Element("traderating")),
                                           MarketRating = GetAttributeValue(xuser.Element("marketrating")),
-                                          Buddies = (from xbuddy in xuser.Descendants("buddy")
+                                          Buddies = (from buddy in xuser.Descendants("buddy")
                                                      select new Buddy
                                                      {
-                                                        Id = GetAttributeValue(xbuddy, "id"),
-                                                        Name = GetAttributeValue(xbuddy, "name")
+                                                        Id = GetAttributeValue(buddy, "id"),
+                                                        Name = GetAttributeValue(buddy, "name")
                                                      }).ToList(),
 
-                                          Guilds = (from xguild in xuser.Descendants("guild")
+                                          Guilds = (from guild in xuser.Descendants("guild")
                                                     select new Guild
                                                     {
-                                                        Id = GetAttributeValue(xguild, "id"),
-                                                        Name = GetAttributeValue(xguild, "name")
+                                                        Id = GetAttributeValue(guild, "id"),
+                                                        Name = GetAttributeValue(guild, "name")
                                                     }).ToList(),
 
-                                          Top = (from xtop in xdoc.XPathSelectElements("/user/top/item")
-                                                 select new TopItem
+                                          Top = (from item in xdoc.XPathSelectElements("/user/top/item")
+                                                 select new Item
                                                  {
-                                                     Rank = GetAttributeValue(xtop,"rank"),
-                                                     Type = GetAttributeValue(xtop,"type"),
-                                                     Id = GetAttributeValue(xtop, "id"),
-                                                     Name = GetAttributeValue(xtop, "name")
+                                                     Rank = GetAttributeValue(item,"rank"),
+                                                     Type = GetAttributeValue(item,"type"),
+                                                     Id = GetAttributeValue(item, "id"),
+                                                     Name = GetAttributeValue(item, "name")
+                                                 }).ToList(),
+                                          Hot = (from item in xdoc.XPathSelectElements("/user/hot/item")
+                                                 select new Item
+                                                 {
+                                                     Rank = GetAttributeValue(item, "rank"),
+                                                     Type = GetAttributeValue(item, "type"),
+                                                     Id = GetAttributeValue(item, "id"),
+                                                     Name = GetAttributeValue(item, "name")
                                                  }).ToList()
                                       };
 
             User user = users.FirstOrDefault();
-            
-            return user;
-        }
 
+            UserResponse response = new UserResponse(user);
+
+            return response;
+        }
+        
         private string GetAttributeValue(XElement element, string attributeName = "value")
         {
             return element.Attribute(attributeName).Value;
-        }
-    }
-
-    internal class Api
-    {
-        public static readonly Uri BaseUrl = new Uri("https://www.boardgamegeek.com/xmlapi2/");
-
-        public static Uri User(string username, bool buddies, bool guilds, bool hot, bool top, string domain, int page)
-        {
-            List<string> args = new List<string>();
-
-            args.Add($"name={username}");
-
-            if (buddies) args.Add("buddies=1");
-            if (guilds) args.Add("guilds=1");
-            if (hot) args.Add("hot=1");
-            if (top) args.Add("top=1");
-            if (!String.IsNullOrWhiteSpace(domain)) args.Add($"domain={domain}");
-            if (page > 1) args.Add($"page={page}");
-
-            string queryArgs = String.Join("&", args);
-
-            return new Uri(BaseUrl, $"user?{queryArgs}");
         }
     }
 }
