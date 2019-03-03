@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Jake Bruun</Authors>
+    <Company />
+    <Description>A client for the BGG XML API2</Description>
+    <Version>0.1.0</Version>
+    <PackageProjectUrl>https://github.com/Cobster/BoardGamer.BoardGameGeek</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Cobster/BoardGamer.BoardGameGeek.git</RepositoryUrl>
+    <PackageTags>BGG BoardGameGeek Board Game Geek</PackageTags>
+    <Copyright></Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageDescription>A client for the BGG XML API2.</PackageDescription>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+</Project>
