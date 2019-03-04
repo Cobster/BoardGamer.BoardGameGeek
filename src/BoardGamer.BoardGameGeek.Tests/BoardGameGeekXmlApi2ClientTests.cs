@@ -30,8 +30,28 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.Equal("Oregon", user.StateOrProvince);
             Assert.Equal("United States", user.Country);
             Assert.Equal(4, user.Buddies.Count);
-            Assert.Single(user.Top);
+            Assert.Equal(3, user.Top.Count);
             Assert.Single(user.Hot);
+        }
+
+        [Fact]
+        public async Task Should_retrieve_users_game_collection()
+        {
+            HttpClient http = new HttpClient();
+
+            IBoardGameGeekXmlApi2Client bgg = new BoardGameGeekXmlApi2Client(http);
+
+            CollectionResponse response = await bgg.GetCollectionAsync(new CollectionRequest(
+                "jakefromstatefarm",
+                stats: true));
+
+            Assert.True(response.Succeeded);
+
+            Collection collection = response.Collection;
+
+            Assert.NotNull(collection);
+
+            Assert.Equal(55, collection.Items.Count);
 
         }
     }
