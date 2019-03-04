@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -20,26 +21,86 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             this.http = http;
         }
 
+        
+
+        public async Task<CollectionResponse> GetCollectionAsync(CollectionRequest request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            XDocument xdoc = await GetXDocumentAsync(request.RelativeUrl).ConfigureAwait(false);
+
+            Collection collection = new Collection();
+            collection.PublishDate = xdoc.Root.AttributeValueAsDateTime("pubdate");
+            collection.Items = (from item in xdoc.Descendants("item")
+                                let stats = item.Element("stats")
+                                let rating = stats?.Element("rating")
+                                let ranks = rating.Descendants("rank")
+                                let status = item.Element("status")
+                                select new Collection.Item
+                                {
+                                    ObjectType = item.AttributeValue("objecttype"),
+                                    ObjectId = item.AttributeValue("objectid"),
+                                    SubType = item.AttributeValue("subtype"),
+                                    CollectionId = item.AttributeValue("collid"),
+                                    Name = item.ElementValue("name"),
+                                    YearPublished = item.ElementValue("yearpublished"),
+                                    Image = item.ElementValue("image"),
+                                    Thumbnail = item.ElementValue("thumbnail"),
+                                    Stats = new Collection.Stats
+                                    {
+                                        MinPlayers = stats.AttributeValueAsInt32("minplayers"),
+                                        MaxPlayers = stats.AttributeValueAsInt32("maxplayers"),
+                                        MinPlayTime = stats.AttributeValueAsInt32("minplaytime"),
+                                        MaxPlayTime = stats.AttributeValueAsInt32("maxplaytime"),
+                                        PlayingTime = stats.AttributeValueAsInt32("playingtime"),
+                                        NumOwned = stats.AttributeValueAsInt32("numowned"),
+                                        Rating = new Collection.Rating
+                                        {
+                                            Value = rating.AttributeValueAsNullableInt32("value"),
+                                            UsersRated = rating.Element("usersrated").AttributeValueAsNullableInt32("value"),
+                                            Average = rating.Element("average").AttributeValueAsDouble("value"),
+                                            BayesAverage = rating.Element("bayesaverage").AttributeValueAsDouble("value"),
+                                            StandardDeviation = rating.Element("stddev").AttributeValueAsNullableDouble("value"),
+                                            Median = rating.Element("median").AttributeValueAsNullableInt32("value"),
+                                            Ranks = (from rank in ranks
+                                                     select new Collection.Rank
+                                                     {
+                                                         Type = rank.AttributeValue("type"),
+                                                         Id = rank.AttributeValueAsInt32("id"),
+                                                         Name = rank.AttributeValue("name"),
+                                                         FriendlyName = rank.AttributeValue("friendlyname"),
+                                                         Value = rank.AttributeValueAsNullableInt32("value"),
+                                                         BayesAverage = rank.AttributeValueAsDouble("bayesaverage")
+                                                     }).ToList()
+                                        }
+                                    },
+                                    Status = new Collection.Status
+                                    {
+                                        Owned = status.AttributeValueAsBoolean("own"),
+                                        PreviouslyOwned = status.AttributeValueAsBoolean("prevowned"),
+                                        ForTrade = status.AttributeValueAsBoolean("fortrade"),
+                                        Want = status.AttributeValueAsBoolean("want"),
+                                        WantToPlay = status.AttributeValueAsBoolean("wanttoplay"),
+                                        WantToBuy = status.AttributeValueAsBoolean("wanttobuy"),
+                                        Wishlist = status.AttributeValueAsBoolean("wishlist"),
+                                        Preordered = status.AttributeValueAsBoolean("preordered"),
+                                        LastModified = status.AttributeValueAsDateTime("lastmodified")
+                                    },
+                                    NumPlays = item.ElementValueAsInt32("numplays")
+                                }).ToList();
+            
+
+            CollectionResponse response = new CollectionResponse(collection);
+
+
+            return response;
+        }
+
         public async Task<UserResponse> GetUserAsync(UserRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            Uri requestUri = new Uri(BaseUrl, request.Url); //Api.User(username, buddies, guilds, hot, top, domain, page);
-
-            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUri);
-            HttpResponseMessage httpResponse = await this.http.SendAsync(httpRequest).ConfigureAwait(false);
-
-            if (!httpResponse.IsSuccessStatusCode)
-            {
-                // error occured
-                // handle it
-            }
-
-            XDocument xdoc;
-            using (var contentStream = await httpResponse.Content.ReadAsStreamAsync())
-            {
-                xdoc = XDocument.Load(contentStream);
-            }
+            XDocument xdoc = await GetXDocumentAsync(request.RelativeUrl).ConfigureAwait(false);
 
             IEnumerable<User> users = from xuser in xdoc.Descendants("user")
                                       select new User
@@ -99,10 +160,39 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 
             return response;
         }
-        
+
+        private async Task<XDocument> GetXDocumentAsync(Uri relativeUri)
+        {
+            Uri requestUrl = new Uri(BaseUrl, relativeUri);
+
+            for (int retry = 0; retry < 20; retry++)
+            {
+                HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+                HttpResponseMessage httpResponse = await this.http.SendAsync(httpRequest).ConfigureAwait(false);
+
+                if (!httpResponse.IsSuccessStatusCode)
+                {
+                    // error occurred handle it
+                    throw new Exception("An error occurred.");
+                }
+
+                if (httpResponse.StatusCode == System.Net.HttpStatusCode.Accepted)
+                {
+                    await Task.Delay(500).ConfigureAwait(false);
+                    continue;
+                }
+
+                return await httpResponse.Content.ReadAsXDocumentAsync().ConfigureAwait(false);
+            }
+
+            throw new Exception("Retries exhausted");
+        }
+
         private string GetAttributeValue(XElement element, string attributeName = "value")
         {
-            return element.Attribute(attributeName).Value;
+            return element?.Attribute(attributeName)?.Value;
         }
+
+        
     }
 }

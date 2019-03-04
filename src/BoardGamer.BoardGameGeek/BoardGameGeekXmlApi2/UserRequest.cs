@@ -7,12 +7,12 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
     {
         public UserRequest(
             string name, 
-            bool buddies = false, 
-            bool guilds = false,
-            bool hot = false,
-            bool top = false,
+            bool? buddies = null, 
+            bool? guilds = null,
+            bool? hot = null,
+            bool? top = null,
             string domain = null,
-            int page = 1)
+            int? page = null)
         {
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(nameof(name));
             if (page < 1) throw new ArgumentOutOfRangeException(nameof(page), page, "Must be greater than or equal to 1.");
@@ -35,34 +35,31 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             Top = top;
             Page = page;
 
-            Url = BuildRelativeUrl();
+            RelativeUrl = BuildRelativeUrl();
         }
 
         public string Name { get; }
-        public bool Buddies { get; }
-        public bool Guilds { get; }
-        public bool Hot { get; }
-        public bool Top { get; }
+        public bool? Buddies { get; }
+        public bool? Guilds { get; }
+        public bool? Hot { get; }
+        public bool? Top { get; }
         public string Domain { get; }
-        public int Page { get; }
-        public Uri Url { get; }
+        public int? Page { get; }
+        public Uri RelativeUrl { get; }
 
         private Uri BuildRelativeUrl()
         {
-            List<string> args = new List<string>();
+            UrlBuilder builder = new UrlBuilder()
+                .Path("user")
+                .AddQueryArgument("name", Name)
+                .AddQueryArgument("buddies", Buddies)
+                .AddQueryArgument("guilds", Guilds)
+                .AddQueryArgument("hot", Hot)
+                .AddQueryArgument("top", Top)
+                .AddQueryArgument("domain", Domain)
+                .AddQueryArgument("page", Page);
 
-            args.Add($"name={Name}");
-
-            if (Buddies) args.Add("buddies=1");
-            if (Guilds) args.Add("guilds=1");
-            if (Hot) args.Add("hot=1");
-            if (Top) args.Add("top=1");
-            if (!String.IsNullOrWhiteSpace(Domain)) args.Add($"domain={Domain}");
-            if (Page > 1) args.Add($"page={Page}");
-
-            string queryArgs = String.Join("&", args);
-
-            return new Uri($"user?{queryArgs}", UriKind.Relative);
+            return builder.ToUrl();
         }
     }
 }
