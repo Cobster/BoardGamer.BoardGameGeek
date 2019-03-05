@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -20,8 +21,6 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         {
             this.http = http;
         }
-
-        
 
         public async Task<CollectionResponse> GetCollectionAsync(CollectionRequest request)
         {
@@ -92,6 +91,147 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 
             CollectionResponse response = new CollectionResponse(collection);
 
+
+            return response;
+        }
+
+        public async Task<ThingResponse> GetThingAsync(ThingRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            XDocument xdoc = await GetXDocumentAsync(request.RelativeUrl).ConfigureAwait(false);
+
+            IEnumerable<Thing> things = from item in xdoc.Descendants("item")
+                                        select new Thing
+                                        {
+                                            Id = item.AttributeValueAsInt32("id"),
+                                            Type = item.AttributeValue("type"),
+                                            Thumbnail = item.ElementValue("thumbnail"),
+                                            Image = item.ElementValue("image"),
+                                            Name = item.Elements("name").FirstOrDefault(x => x.AttributeValue("type") == "primary")?.AttributeValue("value"),
+                                            AlternateNames = (from n in item.Elements("name").Where(x => x.AttributeValue("type") != "primary")
+                                                              select n.AttributeValue("value")).ToList(),
+                                            Description = WebUtility.HtmlDecode(item.ElementValue("description")),
+                                            YearPublished = item.Element("yearpublished").AttributeValueAsNullableInt32("value"),
+                                            ReleaseDate = item.Element("releasedate").AttributeValueAsNullableDateTime("value"),
+                                            MinPlayers = item.Element("minplayers").AttributeValueAsInt32("value"),
+                                            MaxPlayers = item.Element("maxplayers").AttributeValueAsInt32("value"),
+                                            PlayingTime = item.Element("playingtime").AttributeValueAsNullableInt32("value"),
+                                            MinPlayingTime = item.Element("minplaytime").AttributeValueAsNullableInt32("value"),
+                                            MaxPlayingTime = item.Element("maxplaytime").AttributeValueAsNullableInt32("value"),
+                                            MinAge = item.Element("minage").AttributeValueAsNullableInt32("value"),
+
+                                            Polls = (from poll in item.Elements("poll")
+                                                     let results = poll.Elements("results")
+                                                     select new Thing.Poll
+                                                     {
+                                                         Name = poll.AttributeValue("name"),
+                                                         Title = poll.AttributeValue("title"),
+                                                         TotalVotes = poll.AttributeValueAsInt32("totalvotes"),
+                                                         Results = (from r in results
+                                                                    let res = r.Elements("result")
+                                                                    select new Thing.PollResults
+                                                                    {
+                                                                        NumPlayers = r.AttributeValueAsNullableInt32("numplayers"),
+                                                                        Results = (from x in res
+                                                                                   select new Thing.PollResult
+                                                                                   {
+                                                                                       Value = x.AttributeValue("value"),
+                                                                                       NumVotes = x.AttributeValueAsInt32("numvotes")
+                                                                                   }).ToList()
+                                                                    }).ToList()
+                                                     }).ToList(),
+
+                                            Links = (from link in item.Elements("link")
+                                                     select new Thing.Link
+                                                     {
+                                                         Type = link.AttributeValue("type"),
+                                                         Id = link.AttributeValueAsInt32("id"),
+                                                         Value = link.AttributeValue("value")
+                                                     }).ToList(),
+
+                                            Versions = Concatenate( from v in item.XPathSelectElements("versions/item[@type='boardgameversion']")
+                                                                    select (Thing.Version) new Thing.BoardGameVersion
+                                                                    {
+                                                                        Type = v.AttributeValue("type"),
+                                                                        Id = v.AttributeValueAsInt32("id"),
+                                                                        Thumbnail = v.ElementValue("thumbnail"),
+                                                                        Image = v.ElementValue("image"),
+                                                                        Name = v.Element("name").AttributeValue("value"),
+                                                                        YearPublished = v.Element("yearpublished").AttributeValueAsInt32("value"),
+                                                                        ProductCode = v.Element("productcode").AttributeValue("value"),
+                                                                        Width = v.Element("width").AttributeValueAsNullableDouble("value"),
+                                                                        Length = v.Element("length").AttributeValueAsNullableDouble("value"),
+                                                                        Depth = v.Element("depth").AttributeValueAsNullableDouble("value"),
+                                                                        Weight = v.Element("weight").AttributeValueAsNullableDouble("value"),
+                                                                        Links = (from l in v.Elements("link")
+                                                                                 select new Thing.Link
+                                                                                 {
+                                                                                     Type = l.AttributeValue("type"),
+                                                                                     Id = l.AttributeValueAsInt32("id"),
+                                                                                     Value = l.AttributeValue("value")
+                                                                                 }).ToList()
+
+                                                                    },
+
+                                                                    from v in item.XPathSelectElements("versions/item[@type='rpgitemversion']")
+                                                                    select (Thing.Version)new Thing.RpgItemVersion
+                                                                    {
+                                                                        Type = v.AttributeValue("type"),
+                                                                        Id = v.AttributeValueAsInt32("id"),
+                                                                        Thumbnail = v.ElementValue("thumbnail"),
+                                                                        Image = v.ElementValue("image"),
+                                                                        Name = v.Element("name").AttributeValue("value"),
+                                                                        YearPublished = v.Element("yearpublished").AttributeValueAsInt32("value"),
+                                                                        Format = v.Element("format").AttributeValue("value"),
+                                                                        ProductCode = v.Element("productcode").AttributeValue("value"),
+                                                                        PageCount = v.Element("pagecount").AttributeValueAsNullableInt32("value"),
+                                                                        Isbn10 = v.Element("isbn10").AttributeValue("value"),
+                                                                        Isbn13 = v.Element("isbn13").AttributeValue("value"),
+                                                                        Width = v.Element("width").AttributeValueAsNullableDouble("value"),
+                                                                        Height = v.Element("height").AttributeValueAsNullableDouble("value"),
+                                                                        Weight = v.Element("weight").AttributeValueAsNullableDouble("value"),
+                                                                        Description = WebUtility.HtmlDecode(v.ElementValue("description")),
+                                                                        Links = (from l in v.Elements("link")
+                                                                                 select new Thing.Link
+                                                                                 {
+                                                                                     Type = l.AttributeValue("type"),
+                                                                                     Id = l.AttributeValueAsInt32("id"),
+                                                                                     Value = l.AttributeValue("value")
+                                                                                 }).ToList()
+                                                                    },
+
+                                                                    from v in item.XPathSelectElements("versions/item[@type='videogameversion']")
+                                                                    select (Thing.Version) new Thing.VideoGameVersion
+                                                                    {
+                                                                        Type = v.AttributeValue("type"),
+                                                                        Id = v.AttributeValueAsInt32("id"),
+                                                                        Thumbnail = v.ElementValue("thumbnail"),
+                                                                        Image = v.ElementValue("image"),
+                                                                        Name = v.Element("name").AttributeValue("value"),
+                                                                        ReleaseDate = v.Element("releasedate").AttributeValueAsDateTime("value"),
+                                                                        Links = (from l in v.Elements("link")
+                                                                                 select new Thing.Link
+                                                                                 {
+                                                                                     Type = l.AttributeValue("type"),
+                                                                                     Id = l.AttributeValueAsInt32("id"),
+                                                                                     Value = l.AttributeValue("value")
+                                                                                 }).ToList()
+                                                                    },
+
+                                                                    from v in item.XPathSelectElements("versions/item[@type='vgcharacterversion']")
+                                                                    select (Thing.Version)new Thing.VideoGameCharacterVersion
+                                                                    {
+                                                                        Type = v.AttributeValue("type"),
+                                                                        Id = v.AttributeValueAsInt32("id"),
+                                                                        Thumbnail = v.ElementValue("thumbnail"),
+                                                                        Image = v.ElementValue("image")
+                                                                    }).ToList()
+
+                                        };
+
+            ThingResponse response = new ThingResponse(things);
 
             return response;
         }
@@ -193,6 +333,10 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             return element?.Attribute(attributeName)?.Value;
         }
 
+        private IEnumerable<Thing.Version> Concatenate(params IEnumerable<Thing.Version>[] versions)
+        {
+            return versions.SelectMany(x => x);
+        }
         
     }
 }

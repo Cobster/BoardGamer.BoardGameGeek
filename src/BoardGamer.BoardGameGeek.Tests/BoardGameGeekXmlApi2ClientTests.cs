@@ -1,5 +1,6 @@
 using BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
@@ -53,6 +54,82 @@ namespace BoardGamer.BoardGameGeek.Tests
 
             Assert.Equal(55, collection.Items.Count);
 
+        }
+
+        [Fact]
+        public async Task Should_retrieve_a_boardgame_by_id()
+        {
+            HttpClient http = new HttpClient();
+
+            IBoardGameGeekXmlApi2Client bgg = new BoardGameGeekXmlApi2Client(http);
+
+            ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, versions: true));
+            Assert.True(response.Succeeded);
+
+            Thing game = response.Things.FirstOrDefault();
+            Assert.NotNull(game);
+
+            Assert.Equal(172818, game.Id);
+            Assert.Equal("boardgame", game.Type);
+            Assert.NotNull(game.Thumbnail);
+            Assert.NotNull(game.Image);
+            Assert.Equal("Above and Below", game.Name);
+            Assert.Equal(4, game.AlternateNames.Count);
+            Assert.StartsWith("Your last village was ransacked by barbarians.", game.Description);
+            Assert.Equal(2015, game.YearPublished);
+            Assert.Equal(2, game.MinPlayers);
+            Assert.Equal(4, game.MaxPlayers);
+            Assert.Equal(90, game.PlayingTime);
+            Assert.Equal(90, game.MinPlayingTime);
+            Assert.Equal(90, game.MaxPlayingTime);
+            Assert.Equal(13, game.MinAge);
+            Assert.Equal(3, game.Polls.Count);
+            Assert.Equal(38, game.Links.Count);
+            Assert.Equal(7, game.Versions.Count);
+        }
+
+        [Fact]
+        public async Task Should_retrieve_a_videogame_by_id()
+        {
+            HttpClient http = new HttpClient();
+
+            IBoardGameGeekXmlApi2Client bgg = new BoardGameGeekXmlApi2Client(http);
+
+            ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 69327 }, versions: true));
+            Assert.True(response.Succeeded);
+
+            Thing game = response.Things.FirstOrDefault();
+            Assert.NotNull(game);
+
+            Assert.Equal(69327, game.Id);
+            Assert.Equal("videogame", game.Type);
+            Assert.NotNull(game.Thumbnail);
+            Assert.NotNull(game.Image);
+            Assert.Equal("The Legend of Zelda", game.Name);
+            Assert.Equal(2, game.AlternateNames.Count);
+            Assert.StartsWith("From the back of the \"Classic NES Series\"", game.Description);
+            Assert.Equal(1, game.MinPlayers);
+            Assert.Equal(1, game.MaxPlayers);
+            Assert.Equal(15, game.Links.Count);
+            Assert.Equal(16, game.Versions.Count);
+        }
+
+        [Fact]
+        public async Task Should_retrieve_an_rpg_by_id()
+        {
+            HttpClient http = new HttpClient();
+
+            IBoardGameGeekXmlApi2Client bgg = new BoardGameGeekXmlApi2Client(http);
+
+            ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 234669 }, versions: true));
+            Assert.True(response.Succeeded);
+
+            Thing game = response.Things.FirstOrDefault();
+            Assert.NotNull(game);
+
+            Assert.Equal(234669, game.Id);
+            Assert.Equal("Legacy of Dragonholt", game.Name);
+            Assert.Equal(2, game.Versions.Count);
         }
     }
 }

@@ -53,11 +53,11 @@ namespace BoardGamer.BoardGameGeek
             return this;
         }
 
-        public UrlBuilder AddQueryArgument(string name, IEnumerable<int> value)
+        public UrlBuilder AddQueryArgument<T>(string name, IEnumerable<T> collecton)
         {
-            if (value != null)
+            if (collecton != null)
             {
-                args.Add(name, String.Join(",", value.Select(i => i.ToString())));
+                args.Add(name, String.Join(",", collecton.Select(i => i.ToString())));
             }
             return this;
         }

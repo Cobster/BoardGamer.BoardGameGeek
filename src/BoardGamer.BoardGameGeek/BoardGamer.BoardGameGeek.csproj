@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Authors>Jake Bruun</Authors>
+    <Authors>Jacob Bruun</Authors>
     <Company />
     <Description>A client for the BGG XML API2</Description>
-    <Version>0.1.0</Version>
+    <Version>0.4.0</Version>
     <PackageProjectUrl>https://github.com/Cobster/BoardGamer.BoardGameGeek</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Cobster/BoardGamer.BoardGameGeek.git</RepositoryUrl>
     <PackageTags>BGG BoardGameGeek Board Game Geek</PackageTags>
-    <Copyright></Copyright>
+    <Copyright>Copyright 2019 Jacob Bruun</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageDescription>A client for the BGG XML API2.</PackageDescription>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
