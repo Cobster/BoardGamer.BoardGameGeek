@@ -7,15 +7,18 @@ using Xunit;
 
 namespace BoardGamer.BoardGameGeek.Tests
 {
-    public class BoardGameGeekClientTests
+    public class BoardGameGeekClientTests 
     {
+        private readonly IBoardGameGeekXmlApi2Client bgg;
+
+        public BoardGameGeekClientTests()
+        {
+            bgg = new BoardGameGeekXmlApi2Client(new HttpClient());
+        }
+
         [Fact]
         public async Task Should_retrieve_user_by_boardgamegeek_username()
         {
-            HttpClient http = new HttpClient();
-
-            IBoardGameGeekXmlApi2Client bgg = new BoardGameGeekXmlApi2Client(http);
-
             UserResponse response = await bgg.GetUserAsync(new UserRequest("jakefromstatefarm", buddies: true, hot: true, top: true));
 
             Assert.True(response.Succeeded);
@@ -38,35 +41,25 @@ namespace BoardGamer.BoardGameGeek.Tests
         [Fact]
         public async Task Should_retrieve_users_game_collection()
         {
-            HttpClient http = new HttpClient();
-
-            IBoardGameGeekXmlApi2Client bgg = new BoardGameGeekXmlApi2Client(http);
-
             CollectionResponse response = await bgg.GetCollectionAsync(new CollectionRequest(
                 "jakefromstatefarm",
                 stats: true));
 
             Assert.True(response.Succeeded);
 
-            Collection collection = response.Collection;
+            CollectionResponse.ItemCollection items = response.Items;
 
-            Assert.NotNull(collection);
-
-            Assert.Equal(55, collection.Items.Count);
-
+            Assert.NotNull(items);
+            Assert.Equal(55, items.Count);
         }
 
         [Fact]
         public async Task Should_retrieve_a_boardgame_by_id()
         {
-            HttpClient http = new HttpClient();
-
-            IBoardGameGeekXmlApi2Client bgg = new BoardGameGeekXmlApi2Client(http);
-
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, versions: true));
             Assert.True(response.Succeeded);
 
-            Thing game = response.Things.FirstOrDefault();
+            ThingResponse.Item game = response.Items.FirstOrDefault();
             Assert.NotNull(game);
 
             Assert.Equal(172818, game.Id);
@@ -89,16 +82,28 @@ namespace BoardGamer.BoardGameGeek.Tests
         }
 
         [Fact]
+        public async Task Should_retrieve_videos()
+        {
+            ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, videos: true));
+            Assert.True(response.Succeeded);
+
+            ThingResponse.Item game = response.Items.First();
+
+            Assert.Equal(15, game.Videos.Count);
+            Assert.Equal(94, game.Videos.Total);
+
+            ThingResponse.Video video = game.Videos[5];
+
+            Assert.Equal("How to Play Above and Below", video.Title);
+        }
+
+        [Fact]
         public async Task Should_retrieve_a_videogame_by_id()
         {
-            HttpClient http = new HttpClient();
-
-            IBoardGameGeekXmlApi2Client bgg = new BoardGameGeekXmlApi2Client(http);
-
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 69327 }, versions: true));
             Assert.True(response.Succeeded);
 
-            Thing game = response.Things.FirstOrDefault();
+            ThingResponse.Item game = response.Items.FirstOrDefault();
             Assert.NotNull(game);
 
             Assert.Equal(69327, game.Id);
@@ -112,24 +117,24 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.Equal(1, game.MaxPlayers);
             Assert.Equal(15, game.Links.Count);
             Assert.Equal(16, game.Versions.Count);
+
+            // could be interesting.
         }
 
         [Fact]
         public async Task Should_retrieve_an_rpg_by_id()
         {
-            HttpClient http = new HttpClient();
-
-            IBoardGameGeekXmlApi2Client bgg = new BoardGameGeekXmlApi2Client(http);
-
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 234669 }, versions: true));
             Assert.True(response.Succeeded);
 
-            Thing game = response.Things.FirstOrDefault();
+            ThingResponse.Item game = response.Items.FirstOrDefault();
             Assert.NotNull(game);
 
             Assert.Equal(234669, game.Id);
             Assert.Equal("Legacy of Dragonholt", game.Name);
             Assert.Equal(2, game.Versions.Count);
+
+            // could do more asserts, but i'm not all the interested in the rpg items.
         }
     }
 }
