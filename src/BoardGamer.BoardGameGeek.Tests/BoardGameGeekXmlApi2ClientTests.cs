@@ -7,7 +7,7 @@ using Xunit;
 
 namespace BoardGamer.BoardGameGeek.Tests
 {
-    public class BoardGameGeekClientTests 
+    public class BoardGameGeekClientTests
     {
         private readonly IBoardGameGeekXmlApi2Client bgg;
 
@@ -108,6 +108,29 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.NotNull(game.Statistics);
 
             // values are subject to change - manually test this
+        }
+
+        [Fact]
+        public async Task Should_retrieve_boargame_comments()
+        {
+            ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, comments: true));
+            Assert.True(response.Succeeded);
+
+            ThingResponse.Item game = response.Items.First();
+
+            Assert.NotNull(game.Comments);
+
+            Assert.Equal(1, game.Comments.Page);
+            Assert.Equal(1970, game.Comments.Total); // subject to change
+            Assert.Equal(100, game.Comments.Count);
+
+            // Not 100% sure of the sort order on comments. 
+            // They seem to be oldest to newest, and if so the following assertions shouldn't change over time.
+
+            ThingResponse.Comment comment = game.Comments[0];
+            Assert.Equal("051276", comment.Username);
+            Assert.Equal((double?)null, comment.Rating);
+            Assert.Equal("Kickstarter version", comment.Value);
         }
 
         [Fact]
