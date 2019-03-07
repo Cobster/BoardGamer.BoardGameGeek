@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -471,9 +470,9 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                 return new UserResponse(MapUser(doc.Root));
             }
 
-            User MapUser(XElement userEl)
+            UserResponse.User MapUser(XElement userEl)
             {
-                return new User
+                return new UserResponse.User
                 {
                     Id = userEl.Attribute("id")?.Value,
                     Name = userEl.Attribute("name").Value,
@@ -499,45 +498,45 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                 };
             }
 
-            IEnumerable<Buddy> MapBuddies(XElement userEl)
+            IEnumerable<UserResponse.Buddy> MapBuddies(XElement userEl)
             {
                 if (userEl == null)
                 {
-                    return Enumerable.Empty<Buddy>();
+                    return Enumerable.Empty<UserResponse.Buddy>();
                 }
 
                 return from buddy in userEl.Descendants("buddy")
-                       select new Buddy
+                       select new UserResponse.Buddy
                        {
                            Id = buddy.AttributeValue("id"),
                            Name = buddy.AttributeValue("name")
                        };
             }
 
-            IEnumerable<Guild> MapGuilds(XElement userEl)
+            IEnumerable<UserResponse.Guild> MapGuilds(XElement userEl)
             {
                 if (userEl == null)
                 {
-                    return Enumerable.Empty<Guild>();
+                    return Enumerable.Empty<UserResponse.Guild>();
                 }
 
                 return from guild in userEl.Descendants("guild")
-                       select new Guild
+                       select new UserResponse.Guild
                        {
                            Id = guild.AttributeValue("id"),
                            Name = guild.AttributeValue("name")
                        };
             }
 
-            IEnumerable<Item> MapListItems(XElement userEl, string list)
+            IEnumerable<UserResponse.Item> MapListItems(XElement userEl, string list)
             {
                 if (userEl == null)
                 {
-                    return Enumerable.Empty<Item>();
+                    return Enumerable.Empty<UserResponse.Item>();
                 }
 
                 return from item in xdoc.XPathSelectElements($"/user/{list}/item")
-                       select new Item
+                       select new UserResponse.Item
                        {
                            Rank = item.AttributeValue("rank"),
                            Type = item.AttributeValue("type"),

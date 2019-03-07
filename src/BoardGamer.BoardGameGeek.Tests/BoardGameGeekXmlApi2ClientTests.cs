@@ -23,7 +23,7 @@ namespace BoardGamer.BoardGameGeek.Tests
 
             Assert.True(response.Succeeded);
 
-            User user = response.User;
+            UserResponse.User user = response.Result;
 
             Assert.NotNull(user);
             Assert.Equal("1266617", user.Id);
@@ -47,7 +47,7 @@ namespace BoardGamer.BoardGameGeek.Tests
 
             Assert.True(response.Succeeded);
 
-            CollectionResponse.ItemCollection items = response.Items;
+            CollectionResponse.ItemCollection items = response.Result;
 
             Assert.NotNull(items);
             Assert.Equal(55, items.Count);
@@ -59,7 +59,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, versions: true));
             Assert.True(response.Succeeded);
 
-            ThingResponse.Item game = response.Items.FirstOrDefault();
+            ThingResponse.Item game = response.Result.FirstOrDefault();
             Assert.NotNull(game);
 
             Assert.Equal(172818, game.Id);
@@ -87,7 +87,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, videos: true));
             Assert.True(response.Succeeded);
 
-            ThingResponse.Item game = response.Items.First();
+            ThingResponse.Item game = response.Result.First();
 
             Assert.Equal(15, game.Videos.Count);
             Assert.Equal(94, game.Videos.Total);
@@ -103,7 +103,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, stats: true));
             Assert.True(response.Succeeded);
 
-            ThingResponse.Item game = response.Items.First();
+            ThingResponse.Item game = response.Result.First();
 
             Assert.NotNull(game.Statistics);
 
@@ -116,7 +116,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, comments: true));
             Assert.True(response.Succeeded);
 
-            ThingResponse.Item game = response.Items.First();
+            ThingResponse.Item game = response.Result.First();
 
             Assert.NotNull(game.Comments);
 
@@ -139,7 +139,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, ratingComments: true));
             Assert.True(response.Succeeded);
 
-            ThingResponse.Item game = response.Items.First();
+            ThingResponse.Item game = response.Result.First();
 
             Assert.NotNull(game.RatingComments);
 
@@ -162,7 +162,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, marketplace: true));
             Assert.True(response.Succeeded);
 
-            ThingResponse.Item game = response.Items.First();
+            ThingResponse.Item game = response.Result.First();
 
             Assert.NotNull(game.Marketplace);
 
@@ -184,7 +184,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 69327 }, versions: true));
             Assert.True(response.Succeeded);
 
-            ThingResponse.Item game = response.Items.FirstOrDefault();
+            ThingResponse.Item game = response.Result.FirstOrDefault();
             Assert.NotNull(game);
 
             Assert.Equal(69327, game.Id);
@@ -208,7 +208,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 234669 }, versions: true));
             Assert.True(response.Succeeded);
 
-            ThingResponse.Item game = response.Items.FirstOrDefault();
+            ThingResponse.Item game = response.Result.FirstOrDefault();
             Assert.NotNull(game);
 
             Assert.Equal(234669, game.Id);

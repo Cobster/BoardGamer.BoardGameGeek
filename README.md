@@ -66,7 +66,7 @@ This example makes a user request to get the user's profile information.
 ```
 UserRequest request = new UserRequest("jakefromstatefarm");
 UserResponse response = await bgg.GetUserAsync(request);
-UserResponse.User user = response.User;
+UserResponse.User user = response.Result;
 ```
 
 ### Get a user's profile including all their geek buddies
@@ -77,7 +77,7 @@ profile information and includes the username and id of all their buddies.
 ```
 UserRequest request = new UserRequest("jakefromstatefarm", buddies: true);
 UserResponse response = await bgg.GetUserAsync(request);
-List<UserResponse.Buddy> buddies = response.User.Buddies;
+List<UserResponse.Buddy> buddies = response.Result.Buddies;
 ```
 
 ### Get a user's game collection
@@ -87,7 +87,7 @@ This example makes a collection request to get all of a board games in a user's 
 ```
 CollectionRequest request = new CollectionRequest("jakefromstatefarm");
 CollectionResponse response = await bgg.GetCollectionAsync(request);
-CollectionResponse.ItemCollection collection = response.Items;
+CollectionResponse.ItemCollection collection = response.Result;
 
 foreach (CollectionResponse.Item item in collection) {
 	// do something which each item in the collection
@@ -102,7 +102,7 @@ to filter the collection to the games that play 2 to 4 people.
 ```
 CollectionRequest request = new CollectionRequest("jakefromstatefarm", stats: true);
 CollectionResponse response = await bgg.GetCollectionAsync(request);
-CollectionResponse.ItemCollection collection = response.Items;
+CollectionResponse.ItemCollection collection = response.Result;
 
 Func<CollectionResponse.Item,bool> TwoToFourPeopleCanPlay = i => i.Stats.MinPlayers >= 2 && i.Stats.MaxPlayers <= 4;
 
@@ -116,7 +116,7 @@ This example makes a thing request to get detailed information about board game 
 ```
 ThingRequest request = new ThingRequest(new [] { 161936 });
 ThingResponse response = await bgg.GetThingAsync(request);
-ThingResponse.Item pandemicLegacySeason1 = response.Items.GetFirstOrDefault();
+ThingResponse.Item pandemicLegacySeason1 = response.Result.GetFirstOrDefault();
 ```
 
 ### Get details about multiple board games
@@ -126,8 +126,8 @@ This example makes a thing request with multiple ids to get detail information a
 ```
 ThingRequest request = new ThingRequest(new [] { 161936, 221107 });
 ThingResponse response = await bgg.GetThingAsync(request);
-ThingResponse.Item pandemicLegacySeason1 = response.Items[0];
-ThingResponse.Item pandemicLegacySeason2 = response.Items[1];
+ThingResponse.Item pandemicLegacySeason1 = response.Result[0];
+ThingResponse.Item pandemicLegacySeason2 = response.Result[1];
 ```
 
 ## License
