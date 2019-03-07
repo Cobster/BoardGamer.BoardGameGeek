@@ -111,7 +111,7 @@ namespace BoardGamer.BoardGameGeek.Tests
         }
 
         [Fact]
-        public async Task Should_retrieve_boargame_comments()
+        public async Task Should_retrieve_boardgame_comments()
         {
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, comments: true));
             Assert.True(response.Succeeded);
