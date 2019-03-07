@@ -344,7 +344,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                 {
                     return null;
                 }
-                                
+
                 var ratingEl = statisticsEl.Element("ratings");
 
                 var statistics = new ThingResponse.Statistics
@@ -380,27 +380,6 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                 return statistics;
             }
 
-//<statistics page="1">
-//<ratings>
-//<usersrated value="25033"/>
-//<average value="7.78237"/>
-//<bayesaverage value="7.64078"/>
-//<ranks>
-//<rank type="subtype" id="1" name="boardgame" friendlyname="Board Game Rank" value="54" bayesaverage="7.64078"/>
-//<rank type="family" id="5497" name="strategygames" friendlyname="Strategy Game Rank" value="49" bayesaverage="7.64119"/>
-//</ranks>
-//<stddev value="1.27142"/>
-//<median value="0"/>
-//<owned value="32382"/>
-//<trading value="325"/>
-//<wanting value="1248"/>
-//<wishing value="7121"/>
-//<numcomments value="3888"/>
-//<numweights value="1004"/>
-//<averageweight value="2.8855"/>
-//</ratings>
-//</statistics>            
-
             #endregion
         }
 
@@ -423,29 +402,29 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             User MapUser(XElement userEl)
             {
                 return new User
-                       {
-                           Id = userEl.Attribute("id")?.Value,
-                           Name = userEl.Attribute("name").Value,
-                           FirstName = userEl.Element("firstname").AttributeValue(),
-                           LastName = userEl.Element("lastname").AttributeValue(),
-                           AvatarLink = userEl.Element("avatarlink").AttributeValue(),
-                           YearRegistered = userEl.Element("yearregistered").AttributeValue(),
-                           LastLogin = userEl.Element("lastlogin").AttributeValue(),
-                           StateOrProvince = userEl.Element("stateorprovince").AttributeValue(),
-                           Country = userEl.Element("country").AttributeValue(),
-                           WebAddress = userEl.Element("webaddress").AttributeValue(),
-                           XboxAccount = userEl.Element("xboxaccount").AttributeValue(),
-                           WiiAccount = userEl.Element("wiiaccount").AttributeValue(),
-                           PsnAccount = userEl.Element("psnaccount").AttributeValue(),
-                           BattleNetAccount = userEl.Element("battlenetaccount").AttributeValue(),
-                           SteamAccount = userEl.Element("steamaccount").AttributeValue(),
-                           TradeRating = userEl.Element("traderating").AttributeValue(),
-                           MarketRating = userEl.Element("marketrating").AttributeValue(),
-                           Buddies = MapBuddies(userEl).ToList(),
-                           Guilds = MapGuilds(userEl).ToList(),
-                           Top = MapListItems(userEl, "top").ToList(),
-                           Hot = MapListItems(userEl, "hot").ToList()
-                       };
+                {
+                    Id = userEl.Attribute("id")?.Value,
+                    Name = userEl.Attribute("name").Value,
+                    FirstName = userEl.Element("firstname").AttributeValue(),
+                    LastName = userEl.Element("lastname").AttributeValue(),
+                    AvatarLink = userEl.Element("avatarlink").AttributeValue(),
+                    YearRegistered = userEl.Element("yearregistered").AttributeValue(),
+                    LastLogin = userEl.Element("lastlogin").AttributeValue(),
+                    StateOrProvince = userEl.Element("stateorprovince").AttributeValue(),
+                    Country = userEl.Element("country").AttributeValue(),
+                    WebAddress = userEl.Element("webaddress").AttributeValue(),
+                    XboxAccount = userEl.Element("xboxaccount").AttributeValue(),
+                    WiiAccount = userEl.Element("wiiaccount").AttributeValue(),
+                    PsnAccount = userEl.Element("psnaccount").AttributeValue(),
+                    BattleNetAccount = userEl.Element("battlenetaccount").AttributeValue(),
+                    SteamAccount = userEl.Element("steamaccount").AttributeValue(),
+                    TradeRating = userEl.Element("traderating").AttributeValue(),
+                    MarketRating = userEl.Element("marketrating").AttributeValue(),
+                    Buddies = MapBuddies(userEl).ToList(),
+                    Guilds = MapGuilds(userEl).ToList(),
+                    Top = MapListItems(userEl, "top").ToList(),
+                    Hot = MapListItems(userEl, "hot").ToList()
+                };
             }
 
             IEnumerable<Buddy> MapBuddies(XElement userEl)
