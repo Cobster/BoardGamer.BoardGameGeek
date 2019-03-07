@@ -36,6 +36,11 @@ namespace BoardGamer.BoardGameGeek
             return DateTime.TryParse(element.AttributeValue(attributeName), out DateTime v) ? v : (DateTime?)null;
         }
 
+        public static DateTimeOffset AttributeValueAsDateTimeOffset(this XElement element, string attributeName = "value")
+        {
+            return DateTimeOffset.TryParse(element.AttributeValue(attributeName), out DateTimeOffset v) ? v : default(DateTimeOffset);
+        }
+
         public static double AttributeValueAsDouble(this XElement element, string attributeName = "value")
         {
             return Double.TryParse(element.AttributeValue(attributeName), out double v) ? v : default(double);

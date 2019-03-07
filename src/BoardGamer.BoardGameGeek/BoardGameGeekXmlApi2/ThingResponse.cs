@@ -38,6 +38,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             public Statistics Statistics { get; set; }
             public Comments Comments { get; set; }
             public RatingComments RatingComments { get; set; }
+            public List<MarketplaceListing> Marketplace { get; set; }
         }
 
         public class Poll
@@ -213,6 +214,16 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             public string Username { get; set; }
             public int Rating { get; set; }
             public string Value { get; set; }
+        }
+
+        public class MarketplaceListing
+        {
+            public DateTimeOffset ListDate { get; set; }
+            public string Currency { get; set; }
+            public double Price { get; set; }
+            public string Condition { get; set; }
+            public string Notes { get; set; }
+            public string Link { get; set; }
         }
     }
 }
