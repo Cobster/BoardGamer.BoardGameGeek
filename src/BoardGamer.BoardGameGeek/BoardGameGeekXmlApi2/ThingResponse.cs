@@ -35,6 +35,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             public List<Link> Links { get; set; }
             public List<Version> Versions { get; set; }
             public VideoCollection Videos { get; set; }
+            public Statistics Statistics { get; set; }
         }
 
         public class Poll
@@ -112,7 +113,6 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 
         }
 
-
         public class VideoCollection : List<Video>
         {
             public VideoCollection() { }
@@ -137,6 +137,39 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             public string Username { get; set; }
             public int UserId { get; set; }
             public DateTime PostDate { get; set; }
+        }
+
+        public class Statistics
+        {
+            public int Page { get; set; }
+            public Ratings Ratings { get; set; }
+        }
+
+        public class Ratings
+        {
+            public int? UsersRated { get; set; }
+            public double? Average { get; set; }
+            public double? BayesAverage { get; set; }
+            public double? StandardDeviation { get; set; }
+            public int? Median { get; set; }
+            public List<Rank> Ranks { get; set; }
+            public int? Owned { get; set; }
+            public int? Trading { get; set; }
+            public int? Wanting { get; set; }
+            public int? Wishing { get; set; }
+            public int? NumComments { get; set; }
+            public int? NumWeights { get; set; }
+            public double? AverageWeight { get; set; }
+        }
+
+        public class Rank
+        {
+            public string Type { get; set; }
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public string FriendlyName { get; set; }
+            public int? Value { get; set; }
+            public double? BayesAverage { get; set; }
         }
     }
 }

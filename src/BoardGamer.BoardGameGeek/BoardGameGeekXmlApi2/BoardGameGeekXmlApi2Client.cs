@@ -84,12 +84,12 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                     NumOwned = stats.AttributeValueAsInt32("numowned"),
                     Rating = new CollectionResponse.Rating
                     {
-                        Value = rating.AttributeValueAsNullableInt32("value"),
-                        UsersRated = rating.Element("usersrated").AttributeValueAsNullableInt32("value"),
-                        Average = rating.Element("average").AttributeValueAsDouble("value"),
-                        BayesAverage = rating.Element("bayesaverage").AttributeValueAsDouble("value"),
-                        StandardDeviation = rating.Element("stddev").AttributeValueAsNullableDouble("value"),
-                        Median = rating.Element("median").AttributeValueAsNullableInt32("value"),
+                        Value = rating.AttributeValueAsNullableInt32(),
+                        UsersRated = rating.Element("usersrated").AttributeValueAsNullableInt32(),
+                        Average = rating.Element("average").AttributeValueAsDouble(),
+                        BayesAverage = rating.Element("bayesaverage").AttributeValueAsDouble(),
+                        StandardDeviation = rating.Element("stddev").AttributeValueAsNullableDouble(),
+                        Median = rating.Element("median").AttributeValueAsNullableInt32(),
                         Ranks = (from rank in ranks
                                  select new CollectionResponse.Rank
                                  {
@@ -97,7 +97,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                                      Id = rank.AttributeValueAsInt32("id"),
                                      Name = rank.AttributeValue("name"),
                                      FriendlyName = rank.AttributeValue("friendlyname"),
-                                     Value = rank.AttributeValueAsNullableInt32("value"),
+                                     Value = rank.AttributeValueAsNullableInt32(),
                                      BayesAverage = rank.AttributeValueAsDouble("bayesaverage")
                                  }).ToList()
                     }
@@ -155,22 +155,23 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                            Type = item.AttributeValue("type"),
                            Thumbnail = item.ElementValue("thumbnail"),
                            Image = item.ElementValue("image"),
-                           Name = item.Elements("name").FirstOrDefault(x => x.AttributeValue("type") == "primary")?.AttributeValue("value"),
+                           Name = item.Elements("name").FirstOrDefault(x => x.AttributeValue("type") == "primary")?.AttributeValue(),
                            AlternateNames = (from n in item.Elements("name").Where(x => x.AttributeValue("type") != "primary")
-                                             select n.AttributeValue("value")).ToList(),
+                                             select n.AttributeValue()).ToList(),
                            Description = WebUtility.HtmlDecode(item.ElementValue("description")),
-                           YearPublished = item.Element("yearpublished").AttributeValueAsNullableInt32("value"),
-                           ReleaseDate = item.Element("releasedate").AttributeValueAsNullableDateTime("value"),
-                           MinPlayers = item.Element("minplayers").AttributeValueAsInt32("value"),
-                           MaxPlayers = item.Element("maxplayers").AttributeValueAsInt32("value"),
-                           PlayingTime = item.Element("playingtime").AttributeValueAsNullableInt32("value"),
-                           MinPlayingTime = item.Element("minplaytime").AttributeValueAsNullableInt32("value"),
-                           MaxPlayingTime = item.Element("maxplaytime").AttributeValueAsNullableInt32("value"),
-                           MinAge = item.Element("minage").AttributeValueAsNullableInt32("value"),
+                           YearPublished = item.Element("yearpublished").AttributeValueAsNullableInt32(),
+                           ReleaseDate = item.Element("releasedate").AttributeValueAsNullableDateTime(),
+                           MinPlayers = item.Element("minplayers").AttributeValueAsInt32(),
+                           MaxPlayers = item.Element("maxplayers").AttributeValueAsInt32(),
+                           PlayingTime = item.Element("playingtime").AttributeValueAsNullableInt32(),
+                           MinPlayingTime = item.Element("minplaytime").AttributeValueAsNullableInt32(),
+                           MaxPlayingTime = item.Element("maxplaytime").AttributeValueAsNullableInt32(),
+                           MinAge = item.Element("minage").AttributeValueAsNullableInt32(),
                            Polls = MapPolls(item).ToList(),
                            Links = MapLinks(item).ToList(),
                            Versions = MapVersions(versions).ToList(),
-                           Videos = MapVideoCollection(videos)
+                           Videos = MapVideoCollection(videos),
+                           Statistics = MapStatistics(item.Element("statistics")),
                        };
             }
 
@@ -192,7 +193,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                                           Results = (from x in res
                                                      select new ThingResponse.PollResult
                                                      {
-                                                         Value = x.AttributeValue("value"),
+                                                         Value = x.AttributeValue(),
                                                          NumVotes = x.AttributeValueAsInt32("numvotes")
                                                      }).ToList()
                                       }).ToList()
@@ -206,7 +207,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                        {
                            Type = link.AttributeValue("type"),
                            Id = link.AttributeValueAsInt32("id"),
-                           Value = link.AttributeValue("value")
+                           Value = link.AttributeValue()
                        };
             }
 
@@ -238,13 +239,13 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                            Id = v.AttributeValueAsInt32("id"),
                            Thumbnail = v.ElementValue("thumbnail"),
                            Image = v.ElementValue("image"),
-                           Name = v.Element("name").AttributeValue("value"),
-                           YearPublished = v.Element("yearpublished").AttributeValueAsInt32("value"),
-                           ProductCode = v.Element("productcode").AttributeValue("value"),
-                           Width = v.Element("width").AttributeValueAsNullableDouble("value"),
-                           Length = v.Element("length").AttributeValueAsNullableDouble("value"),
-                           Depth = v.Element("depth").AttributeValueAsNullableDouble("value"),
-                           Weight = v.Element("weight").AttributeValueAsNullableDouble("value"),
+                           Name = v.Element("name").AttributeValue(),
+                           YearPublished = v.Element("yearpublished").AttributeValueAsInt32(),
+                           ProductCode = v.Element("productcode").AttributeValue(),
+                           Width = v.Element("width").AttributeValueAsNullableDouble(),
+                           Length = v.Element("length").AttributeValueAsNullableDouble(),
+                           Depth = v.Element("depth").AttributeValueAsNullableDouble(),
+                           Weight = v.Element("weight").AttributeValueAsNullableDouble(),
                            Links = MapLinks(v).ToList()
                        };
             }
@@ -258,23 +259,23 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                            Id = v.AttributeValueAsInt32("id"),
                            Thumbnail = v.ElementValue("thumbnail"),
                            Image = v.ElementValue("image"),
-                           Name = v.Element("name").AttributeValue("value"),
-                           YearPublished = v.Element("yearpublished").AttributeValueAsInt32("value"),
-                           Format = v.Element("format").AttributeValue("value"),
-                           ProductCode = v.Element("productcode").AttributeValue("value"),
-                           PageCount = v.Element("pagecount").AttributeValueAsNullableInt32("value"),
-                           Isbn10 = v.Element("isbn10").AttributeValue("value"),
-                           Isbn13 = v.Element("isbn13").AttributeValue("value"),
-                           Width = v.Element("width").AttributeValueAsNullableDouble("value"),
-                           Height = v.Element("height").AttributeValueAsNullableDouble("value"),
-                           Weight = v.Element("weight").AttributeValueAsNullableDouble("value"),
+                           Name = v.Element("name").AttributeValue(),
+                           YearPublished = v.Element("yearpublished").AttributeValueAsInt32(),
+                           Format = v.Element("format").AttributeValue(),
+                           ProductCode = v.Element("productcode").AttributeValue(),
+                           PageCount = v.Element("pagecount").AttributeValueAsNullableInt32(),
+                           Isbn10 = v.Element("isbn10").AttributeValue(),
+                           Isbn13 = v.Element("isbn13").AttributeValue(),
+                           Width = v.Element("width").AttributeValueAsNullableDouble(),
+                           Height = v.Element("height").AttributeValueAsNullableDouble(),
+                           Weight = v.Element("weight").AttributeValueAsNullableDouble(),
                            Description = WebUtility.HtmlDecode(v.ElementValue("description")),
                            Links = (from l in v.Elements("link")
                                     select new ThingResponse.Link
                                     {
                                         Type = l.AttributeValue("type"),
                                         Id = l.AttributeValueAsInt32("id"),
-                                        Value = l.AttributeValue("value")
+                                        Value = l.AttributeValue()
                                     }).ToList()
                        };
             }
@@ -288,14 +289,14 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                            Id = v.AttributeValueAsInt32("id"),
                            Thumbnail = v.ElementValue("thumbnail"),
                            Image = v.ElementValue("image"),
-                           Name = v.Element("name").AttributeValue("value"),
-                           ReleaseDate = v.Element("releasedate").AttributeValueAsDateTime("value"),
+                           Name = v.Element("name").AttributeValue(),
+                           ReleaseDate = v.Element("releasedate").AttributeValueAsDateTime(),
                            Links = (from l in v.Elements("link")
                                     select new ThingResponse.Link
                                     {
                                         Type = l.AttributeValue("type"),
                                         Id = l.AttributeValueAsInt32("id"),
-                                        Value = l.AttributeValue("value")
+                                        Value = l.AttributeValue()
                                     }).ToList()
                        };
             }
@@ -316,7 +317,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             {
                 if (videosEl == null)
                 {
-                    return new ThingResponse.VideoCollection();
+                    return null;
                 }
 
                 var videos = from v in videosEl.Elements("video")
@@ -335,6 +336,48 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                 int? total = videosEl.AttributeValueAsNullableInt32("total");
 
                 return new ThingResponse.VideoCollection(videos, total);
+            }
+
+            ThingResponse.Statistics MapStatistics(XElement statisticsEl)
+            {
+                if (statisticsEl == null)
+                {
+                    return null;
+                }
+
+                var ratingEl = statisticsEl.Element("ratings");
+
+                var statistics = new ThingResponse.Statistics
+                {
+                    Page = statisticsEl.AttributeValueAsInt32("page"),
+                    Ratings = new ThingResponse.Ratings
+                    {
+                        UsersRated = ratingEl.Element("usersrated").AttributeValueAsNullableInt32(),
+                        Average = ratingEl.Element("average").AttributeValueAsDouble(),
+                        BayesAverage = ratingEl.Element("bayesaverage").AttributeValueAsDouble(),
+                        StandardDeviation = ratingEl.Element("stddev").AttributeValueAsNullableDouble(),
+                        Median = ratingEl.Element("median").AttributeValueAsNullableInt32(),
+                        Ranks = (from rank in ratingEl.Descendants("rank")
+                                 select new ThingResponse.Rank
+                                 {
+                                     Type = rank.AttributeValue("type"),
+                                     Id = rank.AttributeValueAsInt32("id"),
+                                     Name = rank.AttributeValue("name"),
+                                     FriendlyName = rank.AttributeValue("friendlyname"),
+                                     Value = rank.AttributeValueAsNullableInt32(),
+                                     BayesAverage = rank.AttributeValueAsDouble("bayesaverage")
+                                 }).ToList(),
+                        Owned = ratingEl.Element("owned").AttributeValueAsNullableInt32(),
+                        Trading = ratingEl.Element("trading").AttributeValueAsNullableInt32(),
+                        Wanting = ratingEl.Element("wanting").AttributeValueAsNullableInt32(),
+                        Wishing = ratingEl.Element("wishing").AttributeValueAsNullableInt32(),
+                        NumComments = ratingEl.Element("numcomments").AttributeValueAsNullableInt32(),
+                        NumWeights = ratingEl.Element("numweights").AttributeValueAsNullableInt32(),
+                        AverageWeight = ratingEl.Element("averageweight").AttributeValueAsNullableDouble()
+                    }
+                };
+
+                return statistics;
             }
 
             #endregion
@@ -359,29 +402,29 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             User MapUser(XElement userEl)
             {
                 return new User
-                       {
-                           Id = userEl.Attribute("id")?.Value,
-                           Name = userEl.Attribute("name").Value,
-                           FirstName = userEl.Element("firstname").AttributeValue("value"),
-                           LastName = userEl.Element("lastname").AttributeValue("value"),
-                           AvatarLink = userEl.Element("avatarlink").AttributeValue("value"),
-                           YearRegistered = userEl.Element("yearregistered").AttributeValue("value"),
-                           LastLogin = userEl.Element("lastlogin").AttributeValue("value"),
-                           StateOrProvince = userEl.Element("stateorprovince").AttributeValue("value"),
-                           Country = userEl.Element("country").AttributeValue("value"),
-                           WebAddress = userEl.Element("webaddress").AttributeValue("value"),
-                           XboxAccount = userEl.Element("xboxaccount").AttributeValue("value"),
-                           WiiAccount = userEl.Element("wiiaccount").AttributeValue("value"),
-                           PsnAccount = userEl.Element("psnaccount").AttributeValue("value"),
-                           BattleNetAccount = userEl.Element("battlenetaccount").AttributeValue("value"),
-                           SteamAccount = userEl.Element("steamaccount").AttributeValue("value"),
-                           TradeRating = userEl.Element("traderating").AttributeValue("value"),
-                           MarketRating = userEl.Element("marketrating").AttributeValue("value"),
-                           Buddies = MapBuddies(userEl).ToList(),
-                           Guilds = MapGuilds(userEl).ToList(),
-                           Top = MapListItems(userEl, "top").ToList(),
-                           Hot = MapListItems(userEl, "hot").ToList()
-                       };
+                {
+                    Id = userEl.Attribute("id")?.Value,
+                    Name = userEl.Attribute("name").Value,
+                    FirstName = userEl.Element("firstname").AttributeValue(),
+                    LastName = userEl.Element("lastname").AttributeValue(),
+                    AvatarLink = userEl.Element("avatarlink").AttributeValue(),
+                    YearRegistered = userEl.Element("yearregistered").AttributeValue(),
+                    LastLogin = userEl.Element("lastlogin").AttributeValue(),
+                    StateOrProvince = userEl.Element("stateorprovince").AttributeValue(),
+                    Country = userEl.Element("country").AttributeValue(),
+                    WebAddress = userEl.Element("webaddress").AttributeValue(),
+                    XboxAccount = userEl.Element("xboxaccount").AttributeValue(),
+                    WiiAccount = userEl.Element("wiiaccount").AttributeValue(),
+                    PsnAccount = userEl.Element("psnaccount").AttributeValue(),
+                    BattleNetAccount = userEl.Element("battlenetaccount").AttributeValue(),
+                    SteamAccount = userEl.Element("steamaccount").AttributeValue(),
+                    TradeRating = userEl.Element("traderating").AttributeValue(),
+                    MarketRating = userEl.Element("marketrating").AttributeValue(),
+                    Buddies = MapBuddies(userEl).ToList(),
+                    Guilds = MapGuilds(userEl).ToList(),
+                    Top = MapListItems(userEl, "top").ToList(),
+                    Hot = MapListItems(userEl, "hot").ToList()
+                };
             }
 
             IEnumerable<Buddy> MapBuddies(XElement userEl)
