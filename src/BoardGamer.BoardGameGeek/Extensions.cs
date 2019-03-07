@@ -31,6 +31,11 @@ namespace BoardGamer.BoardGameGeek
             return DateTime.TryParse(element.AttributeValue(attributeName), out DateTime v) ? v : default(DateTime);
         }
 
+        public static DateTime? AttributeValueAsNullableDateTime(this XElement element, string attributeName)
+        {
+            return DateTime.TryParse(element.AttributeValue(attributeName), out DateTime v) ? v : (DateTime?)null;
+        }
+
         public static double AttributeValueAsDouble(this XElement element, string attributeName)
         {
             return Double.TryParse(element.AttributeValue(attributeName), out double v) ? v : default(double);
@@ -59,6 +64,11 @@ namespace BoardGamer.BoardGameGeek
         public static int ElementValueAsInt32(this XElement element, string elementName)
         {
             return Int32.TryParse(element.ElementValue(elementName), out int v) ? v : default(int);
+        }
+
+        public static int? ElementValueAsNullableInt32(this XElement element, string elementName)
+        {
+            return Int32.TryParse(element.ElementValue(elementName), out int v) ? v : (int?)null;
         }
     }
 }
