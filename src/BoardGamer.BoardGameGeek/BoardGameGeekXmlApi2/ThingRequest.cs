@@ -54,7 +54,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             this.Historical = historical;
             this.Marketplace = marketplace;
             this.Comments = comments;
-            this.RatingComments = comments;
+            this.RatingComments = ratingComments;
             this.Page = page;
             this.PageSize = pageSize;
             this.RelativeUrl = this.BuildRelativeUrl();

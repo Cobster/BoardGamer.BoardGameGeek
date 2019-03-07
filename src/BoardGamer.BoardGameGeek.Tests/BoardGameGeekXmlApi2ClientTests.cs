@@ -134,6 +134,29 @@ namespace BoardGamer.BoardGameGeek.Tests
         }
 
         [Fact]
+        public async Task Should_retrieve_boardgame_rating_comments()
+        {
+            ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, ratingComments: true));
+            Assert.True(response.Succeeded);
+
+            ThingResponse.Item game = response.Items.First();
+
+            Assert.NotNull(game.RatingComments);
+
+            Assert.Equal(1, game.RatingComments.Page);
+            Assert.Equal(9825, game.RatingComments.Total); // subject to change
+            Assert.Equal(100, game.RatingComments.Count);
+
+            // Not 100% sure of the sort order on comments. 
+            // They seem to be oldest to newest, and if so the following assertions shouldn't change over time.
+
+            ThingResponse.RatingComment comment = game.RatingComments[0];
+            Assert.Equal("artfuldodgr42", comment.Username);
+            Assert.Equal(10, comment.Rating);
+            Assert.Equal("", comment.Value);
+        }
+
+        [Fact]
         public async Task Should_retrieve_a_videogame_by_id()
         {
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 69327 }, versions: true));

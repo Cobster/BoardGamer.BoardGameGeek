@@ -37,6 +37,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             public VideoCollection Videos { get; set; }
             public Statistics Statistics { get; set; }
             public Comments Comments { get; set; }
+            public RatingComments RatingComments { get; set; }
         }
 
         public class Poll
@@ -174,21 +175,43 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         {
             public Comments() { }
 
-            public Comments(IEnumerable<Comment> comments, int? page, int? total)
+            public Comments(IEnumerable<Comment> comments, int page, int total)
                 : base(comments)
             {
                 Page = page;
                 Total = total;
             }
 
-            public int? Page { get; set; }
-            public int? Total { get; set; }
+            public int Page { get; set; }
+            public int Total { get; set; }
         }
 
         public class Comment
         {
             public string Username { get; set; }
             public double? Rating { get; set; }
+            public string Value { get; set; }
+        }
+
+        public class RatingComments : List<RatingComment>
+        {
+            public RatingComments() { }
+
+            public RatingComments(IEnumerable<RatingComment> comments, int page, int total)
+                : base(comments)
+            {
+                Page = page;
+                Total = total;
+            }
+
+            public int Page { get; set; }
+            public int Total { get; set; }
+        }
+
+        public class RatingComment
+        {
+            public string Username { get; set; }
+            public int Rating { get; set; }
             public string Value { get; set; }
         }
     }

@@ -133,6 +133,16 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
+            bool comments = request.Comments.GetValueOrDefault();
+            bool ratingComments = request.RatingComments.GetValueOrDefault();
+
+            if (comments == true && ratingComments == true)
+            {
+                // If request is sent, and both are true, the comments will supercede the rating comments.
+                // Figured it was best to just call this out as an error, rather than return unexpected information.
+                throw new ArgumentException("The comments and ratingcomments properties are mutually exclusive.");
+            }
+
             XDocument xdoc = await GetXDocumentAsync(request.RelativeUrl).ConfigureAwait(false);
             ThingResponse response = Map(xdoc);
             return response;
@@ -169,10 +179,11 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                            MinAge = item.Element("minage").AttributeValueAsNullableInt32(),
                            Polls = MapPolls(item).ToList(),
                            Links = MapLinks(item).ToList(),
-                           Versions = MapVersions(versions).ToList(),
+                           Versions = MapVersions(versions),
                            Videos = MapVideoCollection(videos),
                            Statistics = MapStatistics(item.Element("statistics")),
-                           Comments = MapComments(item.Element("comments"))
+                           Comments = comments ? MapComments(item.Element("comments")) : null,
+                           RatingComments = ratingComments ? MapRatingComments(item.Element("comments")) : null,
                        };
             }
 
@@ -212,11 +223,11 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                        };
             }
 
-            IEnumerable<ThingResponse.Version> MapVersions(XElement versionsEl)
+            List<ThingResponse.Version> MapVersions(XElement versionsEl)
             {
                 if (versionsEl == null)
                 {
-                    return Enumerable.Empty<ThingResponse.Version>();
+                    return null;
                 }
 
                 var versions = new IEnumerable<ThingResponse.Version>[]
@@ -227,7 +238,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                     MapVideoGameCharacterVersion(versionsEl)
                 };
 
-                return versions.SelectMany(x => x);
+                return versions.SelectMany(x => x).ToList();
             }
 
             IEnumerable<ThingResponse.BoardGameVersion> MapBoardGameVersions(XElement versionsEl)
@@ -388,7 +399,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                     return null;
                 }
 
-                var comments = new ThingResponse.Comments(
+                return new ThingResponse.Comments(
                         from comment in commentsEl.Elements("comment")
                         select new ThingResponse.Comment
                         {
@@ -396,12 +407,29 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                             Rating = comment.AttributeValueAsNullableDouble("rating"),
                             Value = comment.AttributeValue()
                         },
-                        commentsEl.AttributeValueAsNullableInt32("page"),
-                        commentsEl.AttributeValueAsNullableInt32("totalitems")
-
+                        commentsEl.AttributeValueAsInt32("page"),
+                        commentsEl.AttributeValueAsInt32("totalitems")
                     );
+            }
 
-                return comments;
+            ThingResponse.RatingComments MapRatingComments(XElement commentsEl)
+            {
+                if (commentsEl == null)
+                {
+                    return null;
+                }
+
+                return new ThingResponse.RatingComments(
+                        from comment in commentsEl.Elements("comment")
+                        select new ThingResponse.RatingComment
+                        {
+                            Username = comment.AttributeValue("username"),
+                            Rating = comment.AttributeValueAsInt32("rating"),
+                            Value = comment.AttributeValue()
+                        },
+                        commentsEl.AttributeValueAsInt32("page"),
+                        commentsEl.AttributeValueAsInt32("totalitems")
+                    );
             }
 
             #endregion
