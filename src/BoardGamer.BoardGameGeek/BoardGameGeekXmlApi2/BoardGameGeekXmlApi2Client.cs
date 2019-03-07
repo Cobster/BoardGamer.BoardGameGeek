@@ -127,6 +127,25 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             #endregion
         }
 
+        public async Task<PlaysResponse> GetPlaysAsync(PlaysRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            XDocument xdoc = await GetXDocumentAsync(request.RelativeUrl).ConfigureAwait(false);
+            PlaysResponse response = Map(xdoc);
+            return response;
+
+            #region Helpers 
+
+            PlaysResponse Map(XDocument document)
+            {
+                return new PlaysResponse();
+            }
+
+            #endregion
+        }
+
         public async Task<ThingResponse> GetThingAsync(ThingRequest request)
         {
             if (request == null)

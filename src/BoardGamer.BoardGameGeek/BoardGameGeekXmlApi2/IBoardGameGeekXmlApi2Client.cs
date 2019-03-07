@@ -12,6 +12,13 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         Task<CollectionResponse> GetCollectionAsync(CollectionRequest request);
 
         /// <summary>
+        /// Get the details about a user's logged plays.
+        /// </summary>
+        /// <param name="request">An object representing the request to get a user's logged plays from boardgamegeek.com</param>
+        /// <returns>A collection of logged plays.</returns>
+        Task<PlaysResponse> GetPlaysAsync(PlaysRequest request);
+
+        /// <summary>
         /// Gets the details about a board game, board game expansion, board game accessory, video game, rpg item, or rpg issue
         /// from the boardgamegeek.com database.
         /// </summary>

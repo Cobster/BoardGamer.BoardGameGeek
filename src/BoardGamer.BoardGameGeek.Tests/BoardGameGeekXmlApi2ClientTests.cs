@@ -217,5 +217,12 @@ namespace BoardGamer.BoardGameGeek.Tests
 
             // could do more asserts, but i'm not all the interested in the rpg items.
         }
+
+        [Fact]
+        public async Task Should_retrieve_logged_plays_for_user()
+        {
+            PlaysResponse response = await bgg.GetPlaysAsync(new PlaysRequest("jakefromstatefarm"));
+            Assert.True(response.Succeeded);
+        }
     }
 }
