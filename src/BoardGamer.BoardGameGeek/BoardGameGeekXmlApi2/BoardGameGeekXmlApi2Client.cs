@@ -172,6 +172,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                            Versions = MapVersions(versions).ToList(),
                            Videos = MapVideoCollection(videos),
                            Statistics = MapStatistics(item.Element("statistics")),
+                           Comments = MapComments(item.Element("comments"))
                        };
             }
 
@@ -378,6 +379,29 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                 };
 
                 return statistics;
+            }
+
+            ThingResponse.Comments MapComments(XElement commentsEl)
+            {
+                if (commentsEl == null)
+                {
+                    return null;
+                }
+
+                var comments = new ThingResponse.Comments(
+                        from comment in commentsEl.Elements("comment")
+                        select new ThingResponse.Comment
+                        {
+                            Username = comment.AttributeValue("username"),
+                            Rating = comment.AttributeValueAsNullableDouble("rating"),
+                            Value = comment.AttributeValue()
+                        },
+                        commentsEl.AttributeValueAsNullableInt32("page"),
+                        commentsEl.AttributeValueAsNullableInt32("totalitems")
+
+                    );
+
+                return comments;
             }
 
             #endregion

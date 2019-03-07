@@ -36,6 +36,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             public List<Version> Versions { get; set; }
             public VideoCollection Videos { get; set; }
             public Statistics Statistics { get; set; }
+            public Comments Comments { get; set; }
         }
 
         public class Poll
@@ -115,16 +116,13 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 
         public class VideoCollection : List<Video>
         {
-            public VideoCollection() { }
             public VideoCollection(IEnumerable<Video> videos, int? total)
                 : base(videos)
             {
-                Videos = new List<Video>(videos);
                 Total = total;
             }
 
             public int? Total { get; set; }
-            public List<Video> Videos { get; set; }
         }
 
         public class Video
@@ -170,6 +168,28 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             public string FriendlyName { get; set; }
             public int? Value { get; set; }
             public double? BayesAverage { get; set; }
+        }
+
+        public class Comments : List<Comment>
+        {
+            public Comments() { }
+
+            public Comments(IEnumerable<Comment> comments, int? page, int? total)
+                : base(comments)
+            {
+                Page = page;
+                Total = total;
+            }
+
+            public int? Page { get; set; }
+            public int? Total { get; set; }
+        }
+
+        public class Comment
+        {
+            public string Username { get; set; }
+            public double? Rating { get; set; }
+            public string Value { get; set; }
         }
     }
 }
