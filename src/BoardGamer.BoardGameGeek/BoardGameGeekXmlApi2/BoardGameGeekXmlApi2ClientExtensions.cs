@@ -14,7 +14,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 
             ThingResponse response = await bggClient.GetThingAsync(request);
 
-            return response.Items.FirstOrDefault();
+            return response.Result.FirstOrDefault();
         }
     }
 }

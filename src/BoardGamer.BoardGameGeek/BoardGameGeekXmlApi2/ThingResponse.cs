@@ -8,11 +8,11 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         public ThingResponse(IEnumerable<Item> things)
         {
             this.Succeeded = true;
-            this.Items = new List<Item>(things);
+            this.Result = new List<Item>(things);
         }
 
         public bool Succeeded { get; }
-        public List<Item> Items { get; }
+        public List<Item> Result { get; }
 
         public class Item
         {

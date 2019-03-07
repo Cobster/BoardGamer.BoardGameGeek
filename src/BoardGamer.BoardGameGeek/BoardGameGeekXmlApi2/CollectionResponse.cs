@@ -8,10 +8,10 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         public CollectionResponse(ItemCollection items)
         {
             this.Succeeded = true;
-            this.Items = items;
+            this.Result = items;
         }
 
-        public ItemCollection Items { get; }
+        public ItemCollection Result { get; }
         public bool Succeeded { get; }
 
         public class ItemCollection : List<Item>
