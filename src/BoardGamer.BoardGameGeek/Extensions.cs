@@ -16,42 +16,42 @@ namespace BoardGamer.BoardGameGeek
             }
         }
 
-        public static string AttributeValue(this XElement element, string attributeName)
+        public static string AttributeValue(this XElement element, string attributeName = "value")
         {
             return element?.Attribute(attributeName)?.Value;
         }
 
-        public static bool AttributeValueAsBoolean(this XElement element, string attributeName)
+        public static bool AttributeValueAsBoolean(this XElement element, string attributeName = "value")
         {
             return element.AttributeValueAsNullableInt32(attributeName).GetValueOrDefault() == 1;
         }
 
-        public static DateTime AttributeValueAsDateTime(this XElement element, string attributeName)
+        public static DateTime AttributeValueAsDateTime(this XElement element, string attributeName = "value")
         {
             return DateTime.TryParse(element.AttributeValue(attributeName), out DateTime v) ? v : default(DateTime);
         }
 
-        public static DateTime? AttributeValueAsNullableDateTime(this XElement element, string attributeName)
+        public static DateTime? AttributeValueAsNullableDateTime(this XElement element, string attributeName = "value")
         {
             return DateTime.TryParse(element.AttributeValue(attributeName), out DateTime v) ? v : (DateTime?)null;
         }
 
-        public static double AttributeValueAsDouble(this XElement element, string attributeName)
+        public static double AttributeValueAsDouble(this XElement element, string attributeName = "value")
         {
             return Double.TryParse(element.AttributeValue(attributeName), out double v) ? v : default(double);
         }
 
-        public static double? AttributeValueAsNullableDouble(this XElement element, string attributeName)
+        public static double? AttributeValueAsNullableDouble(this XElement element, string attributeName = "value")
         {
             return Double.TryParse(element.AttributeValue(attributeName), out double v) ? v : (double?)null;
         }
 
-        public static int AttributeValueAsInt32(this XElement element, string attributeName)
+        public static int AttributeValueAsInt32(this XElement element, string attributeName = "value")
         {
             return Int32.TryParse(element.AttributeValue(attributeName), out int v) ? v : default(int);
         }
 
-        public static int? AttributeValueAsNullableInt32(this XElement element, string attributeName)
+        public static int? AttributeValueAsNullableInt32(this XElement element, string attributeName = "value")
         {
             return Int32.TryParse(element.AttributeValue(attributeName), out int v) ? v : (int?)null;
         }

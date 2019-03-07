@@ -98,6 +98,19 @@ namespace BoardGamer.BoardGameGeek.Tests
         }
 
         [Fact]
+        public async Task Should_retrieve_boardgame_statistics()
+        {
+            ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, stats: true));
+            Assert.True(response.Succeeded);
+
+            ThingResponse.Item game = response.Items.First();
+
+            Assert.NotNull(game.Statistics);
+
+            // values are subject to change - manually test this
+        }
+
+        [Fact]
         public async Task Should_retrieve_a_videogame_by_id()
         {
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 69327 }, versions: true));
