@@ -157,6 +157,28 @@ namespace BoardGamer.BoardGameGeek.Tests
         }
 
         [Fact]
+        public async Task Should_retrieve_boardgame_marketplace_listings()
+        {
+            ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 172818 }, marketplace: true));
+            Assert.True(response.Succeeded);
+
+            ThingResponse.Item game = response.Items.First();
+
+            Assert.NotNull(game.Marketplace);
+
+            ThingResponse.MarketplaceListing listing = game.Marketplace[0];
+
+            Assert.Equal(new DateTimeOffset(2016, 1, 16, 20, 08, 34, 0, TimeSpan.FromHours(0)), listing.ListDate);
+            Assert.Equal("EUR", listing.Currency);
+            Assert.Equal(45.90, listing.Price);
+            Assert.Equal("new", listing.Condition);
+            Assert.Equal("weight: 1760 grams + packaging", listing.Notes);
+            Assert.Equal("https://boardgamegeek.com/geekmarket/product/869188", listing.Link);
+
+        }
+
+
+        [Fact]
         public async Task Should_retrieve_a_videogame_by_id()
         {
             ThingResponse response = await bgg.GetThingAsync(new ThingRequest(new int[] { 69327 }, versions: true));

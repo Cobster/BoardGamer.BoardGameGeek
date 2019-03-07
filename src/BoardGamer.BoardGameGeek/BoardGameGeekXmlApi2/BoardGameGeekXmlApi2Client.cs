@@ -184,6 +184,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                            Statistics = MapStatistics(item.Element("statistics")),
                            Comments = comments ? MapComments(item.Element("comments")) : null,
                            RatingComments = ratingComments ? MapRatingComments(item.Element("comments")) : null,
+                           Marketplace = MapMarketplace(item.Element("marketplacelistings"))
                        };
             }
 
@@ -430,6 +431,25 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                         commentsEl.AttributeValueAsInt32("page"),
                         commentsEl.AttributeValueAsInt32("totalitems")
                     );
+            }
+
+            List<ThingResponse.MarketplaceListing> MapMarketplace(XElement marketplaceEl)
+            {
+                if (marketplaceEl == null)
+                {
+                    return null;
+                }
+
+                return (from listing in marketplaceEl.Elements("listing")
+                        select new ThingResponse.MarketplaceListing
+                        {
+                            ListDate = listing.Element("listdate").AttributeValueAsDateTimeOffset(),
+                            Currency = listing.Element("price").AttributeValue("currency"),
+                            Price = listing.Element("price").AttributeValueAsDouble(),
+                            Condition = listing.Element("condition").AttributeValue(),
+                            Notes = listing.Element("notes").AttributeValue(),
+                            Link = listing.Element("link").AttributeValue("href")
+                        }).ToList();
             }
 
             #endregion
