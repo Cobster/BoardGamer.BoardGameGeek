@@ -12,7 +12,11 @@
     <Copyright>Copyright 2019 Jacob Bruun</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageDescription>A client for the BGG XML API2.</PackageDescription>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
 
 </Project>
