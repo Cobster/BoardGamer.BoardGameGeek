@@ -4,14 +4,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Jacob Bruun</Authors>
     <Company />
-    <Description>A client for the BGG XML API2</Description>
-    <Version>0.4.0</Version>
+    <Description>A BGG XML API2 client that provides full fidelity responses that will help you to easily integrate your app with boardgamegeek.com</Description>
+    <Version>0.5.0</Version>
     <PackageProjectUrl>https://github.com/Cobster/BoardGamer.BoardGameGeek</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Cobster/BoardGamer.BoardGameGeek.git</RepositoryUrl>
     <PackageTags>BGG BoardGameGeek Board Game Geek</PackageTags>
     <Copyright>Copyright 2019 Jacob Bruun</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageDescription>A client for the BGG XML API2.</PackageDescription>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
