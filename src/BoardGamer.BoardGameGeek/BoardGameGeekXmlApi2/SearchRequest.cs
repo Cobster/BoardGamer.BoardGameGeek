@@ -18,14 +18,15 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             Query = query;
             Type = null;
             Exact = exact;
+            RelativeUrl = BuildRelativeUrl();
         }
 
         public string Query { get; }
         public string Type { get; }
         public bool? Exact { get; }
-        public Uri RelativeUri { get; }
+        public Uri RelativeUrl { get; }
 
-        private Uri BuildRelativeUri()
+        private Uri BuildRelativeUrl()
         {
             UrlBuilder builder = new UrlBuilder()
                 .Path("search")
