@@ -626,6 +626,46 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             #endregion
         }
 
+        public async Task<SearchResponse> SearchAsync(SearchRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            XDocument xdoc = await GetXDocumentAsync(request.RelativeUrl).ConfigureAwait(false);
+            SearchResponse response = Map(xdoc);
+            return response;
+
+            #region Helpers
+
+            SearchResponse Map(XDocument document)
+            {
+                return new SearchResponse(MapItemCollection(document.Root));
+            }
+
+            SearchResponse.ItemCollection MapItemCollection(XElement itemsEl)
+            {
+                return new SearchResponse.ItemCollection
+                {
+                    Total = itemsEl.AttributeValueAsInt32("total"),
+                    TermsOfUse = itemsEl.AttributeValue("termsofuse"),
+                    Items = itemsEl.Elements("item").Select(MapItem).ToList()
+                };
+            }
+
+            SearchResponse.Item MapItem(XElement itemEl)
+            {
+                return new SearchResponse.Item
+                {
+                    Type = itemEl.AttributeValue("type"),
+                    Id = itemEl.AttributeValueAsInt32("id"),
+                    Name = itemEl.Element("name").AttributeValue(),
+                    YearPublished = itemEl.Element("yearpublished").AttributeValueAsNullableInt32()
+                };
+            }
+
+            #endregion
+        }
+
         private async Task<XDocument> GetXDocumentAsync(Uri relativeUri)
         {
             Uri requestUrl = new Uri(BaseUrl, relativeUri);

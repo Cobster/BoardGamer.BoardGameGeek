@@ -272,8 +272,27 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.False(player2.New);
             Assert.Equal(0, player2.Rating);
             Assert.False(player2.Win);
+        }
 
+        [Fact]
+        public async Task Should_search_for_item()
+        {
+            SearchRequest request = new SearchRequest("brass", exact: true);
+            SearchResponse response = await bgg.SearchAsync(request);
+            Assert.True(response.Succeeded);
 
+            SearchResponse.ItemCollection collection = response.Result;
+
+            Assert.Equal(1, collection.Total);
+            Assert.Equal("https://boardgamegeek.com/xmlapi/termsofuse", collection.TermsOfUse);
+            Assert.Single(collection.Items);
+
+            SearchResponse.Item item = collection.Items[0];
+
+            Assert.Equal("videogame", item.Type);
+            Assert.Equal(188167, item.Id);
+            Assert.Equal("Brass", item.Name);
+            Assert.Null(item.YearPublished);
         }
     }
 }

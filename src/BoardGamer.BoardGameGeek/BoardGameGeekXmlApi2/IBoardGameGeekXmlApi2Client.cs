@@ -32,5 +32,12 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         /// <param name="request"></param>
         /// <returns>A response object containing the user profile information.</returns>
         Task<UserResponse> GetUserAsync(UserRequest request);
+
+        /// <summary>
+        /// Search for items in the boardgamegeek.com database.
+        /// </summary>
+        /// <param name="request">An object that represents the search request.</param>
+        /// <returns>An object containing the search results.</returns>
+        Task<SearchResponse> SearchAsync(SearchRequest request);
     }
 }
