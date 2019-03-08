@@ -127,6 +127,84 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             #endregion
         }
 
+        public async Task<PlaysResponse> GetPlaysAsync(PlaysRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            XDocument xdoc = await GetXDocumentAsync(request.RelativeUrl).ConfigureAwait(false);
+            PlaysResponse response = Map(xdoc);
+            return response;
+
+            #region Helpers 
+
+            PlaysResponse Map(XDocument document)
+            {
+                return new PlaysResponse(MapPlaysCollection(document.Root));
+            }
+
+            PlaysResponse.PlaysCollection MapPlaysCollection(XElement playsEl)
+            {
+                var collection = new PlaysResponse.PlaysCollection
+                {
+                    Username = playsEl.AttributeValue("username"),
+                    UserId = playsEl.AttributeValueAsInt32("userid"),
+                    Total = playsEl.AttributeValueAsInt32("total"),
+                    Page = playsEl.AttributeValueAsInt32("page"),
+                    TermsOfUse = playsEl.AttributeValue("termsofuse"),
+                    Plays = playsEl.Elements("play").Select(MapPlay).ToList()
+                };
+
+                return collection;
+            }
+
+            PlaysResponse.Play MapPlay(XElement playEl)
+            {
+                return new PlaysResponse.Play
+                {
+                    Id = playEl.AttributeValueAsInt32("id"),
+                    Date = playEl.AttributeValueAsDateTime("date"),
+                    Quantity = playEl.AttributeValueAsInt32("quantity"),
+                    Length = playEl.AttributeValueAsInt32("length"),
+                    Incomplete = playEl.AttributeValueAsBoolean("incomplete"),
+                    NowInStats = playEl.AttributeValueAsBoolean("nowinstats"),
+                    Location = playEl.AttributeValue("location"),
+                    Item = MapItem(playEl.Element("item")),
+                    Comments = playEl.ElementValue("comments"),
+                    Players = playEl.Descendants("player").Select(MapPlayer).ToList()
+                };
+            }
+
+            PlaysResponse.Item MapItem(XElement itemEl)
+            {
+                return new PlaysResponse.Item
+                {
+                    Name = itemEl.AttributeValue("name"),
+                    ObjectType = itemEl.AttributeValue("objecttype"),
+                    ObjectId = itemEl.AttributeValueAsInt32("objectid"),
+                    SubTypes = itemEl.Descendants("subtype").Select(el => el.AttributeValue()).ToList()
+                };
+            }
+
+            PlaysResponse.Player MapPlayer(XElement playerEl)
+            {
+                return new PlaysResponse.Player
+                {
+                    Username = playerEl.AttributeValue("username"),
+                    UserId = playerEl.AttributeValueAsInt32("userid"),
+                    Name = playerEl.AttributeValue("name"),
+                    StartPosition = playerEl.AttributeValue("startposition"),
+                    Color = playerEl.AttributeValue("color"),
+                    Score = playerEl.AttributeValue("score"),
+                    New = playerEl.AttributeValueAsBoolean("new"),
+                    Rating = playerEl.AttributeValueAsInt32("rating"),
+                    Win = playerEl.AttributeValueAsBoolean("win")
+                };
+            }
+
+            #endregion
+        }
+
         public async Task<ThingResponse> GetThingAsync(ThingRequest request)
         {
             if (request == null)
@@ -232,10 +310,10 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 
                 var versions = new IEnumerable<ThingResponse.Version>[]
                 {
-                    MapBoardGameVersions(versionsEl),
-                    MapRpgItemVersion(versionsEl),
-                    MapVideoGameVersion(versionsEl),
-                    MapVideoGameCharacterVersion(versionsEl)
+        MapBoardGameVersions(versionsEl),
+        MapRpgItemVersion(versionsEl),
+        MapVideoGameVersion(versionsEl),
+        MapVideoGameCharacterVersion(versionsEl)
                 };
 
                 return versions.SelectMany(x => x).ToList();

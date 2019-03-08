@@ -217,5 +217,63 @@ namespace BoardGamer.BoardGameGeek.Tests
 
             // could do more asserts, but i'm not all the interested in the rpg items.
         }
+
+        [Fact]
+        public async Task Should_retrieve_logged_plays_for_user()
+        {
+            PlaysResponse response = await bgg.GetPlaysAsync(new PlaysRequest("jakefromstatefarm"));
+            Assert.True(response.Succeeded);
+
+            PlaysResponse.PlaysCollection collection = response.Result;
+
+            Assert.NotNull(collection);
+            Assert.Equal("jakefromstatefarm", collection.Username);
+            Assert.Equal(1266617, collection.UserId);
+            Assert.Equal(1, collection.Total);
+            Assert.Equal(1, collection.Page);
+            Assert.Equal("https://boardgamegeek.com/xmlapi/termsofuse", collection.TermsOfUse);
+            Assert.Single(collection.Plays);
+
+            PlaysResponse.Play play = collection.Plays[0];
+            Assert.Equal(3425125, play.Id);
+            Assert.Equal(new DateTime(2019, 3, 7), play.Date);
+            Assert.Equal(1, play.Quantity);
+            Assert.Equal(35, play.Length);
+            Assert.False(play.Incomplete);
+            Assert.False(play.NowInStats);
+            Assert.Equal("hillsboro", play.Location);
+            Assert.Equal("this is just comments field", play.Comments);
+            Assert.Equal(2, play.Players.Count);
+
+            PlaysResponse.Item item = play.Item;
+            Assert.Equal("Isle of Skye: From Chieftain to King", item.Name);
+            Assert.Equal("thing", item.ObjectType);
+            Assert.Equal(176494, item.ObjectId);
+            Assert.Contains("boardgame", item.SubTypes);
+
+            PlaysResponse.Player player1 = play.Players[0];
+            Assert.Equal("jakefromstatefarm", player1.Username);
+            Assert.Equal(1266617, player1.UserId);
+            Assert.Equal("Jake Bruun", player1.Name);
+            Assert.Equal("0", player1.StartPosition);
+            Assert.Equal("green", player1.Color);
+            Assert.Equal("42", player1.Score);
+            Assert.False(player1.New);
+            Assert.Equal(0, player1.Rating);
+            Assert.True(player1.Win);
+
+            PlaysResponse.Player player2 = play.Players[1];
+            Assert.Equal("", player2.Username);
+            Assert.Equal(0, player2.UserId);
+            Assert.Equal("Robyn", player2.Name);
+            Assert.Equal("0", player2.StartPosition);
+            Assert.Equal("red", player2.Color);
+            Assert.Equal("34", player2.Score);
+            Assert.False(player2.New);
+            Assert.Equal(0, player2.Rating);
+            Assert.False(player2.Win);
+
+
+        }
     }
 }
