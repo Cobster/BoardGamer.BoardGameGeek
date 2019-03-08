@@ -15,28 +15,21 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         public bool Succeeded { get; }
 
 
-        public class PlaysCollection : List<Play>
+        public class PlaysCollection
         {
-            public PlaysCollection()
-            {
-
-            }
-
-            public PlaysCollection(IEnumerable<Play> collection)
-                : base(collection)
-            { }
-
             public string Username { get; set; }
             public int UserId { get; set; }
             public int Total { get; set; }
             public int Page { get; set; }
+            public string TermsOfUse { get; set; }
+            public List<Play> Plays { get; set; }
         }
 
         public class Play
         {
             public int Id { get; set; }
             public DateTime Date { get; set; }
-            public int Quanity { get; set; }
+            public int Quantity { get; set; }
             public int Length { get; set; }
             public bool Incomplete { get; set; }
             public bool NowInStats { get; set; }
@@ -48,8 +41,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 
         public class Item
         {
-            public int Id { get; set; }
-            public int UserId { get; set; }
+            public string Name { get; set; }
             public string ObjectType { get; set; }
             public int ObjectId { get; set; }
             public List<string> SubTypes { get; set; }
@@ -64,7 +56,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             public string Color { get; set; }
             public string Score { get; set; }
             public bool New { get; set; }
-            public string Rating { get; set; }
+            public int Rating { get; set; }
             public bool Win { get; set; }
         }
     }
