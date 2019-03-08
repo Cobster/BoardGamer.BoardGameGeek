@@ -130,6 +130,72 @@ ThingResponse.Item pandemicLegacySeason1 = response.Result[0];
 ThingResponse.Item pandemicLegacySeason2 = response.Result[1];
 ```
 
+### Get logged play information for a player
+
+This examples gets the most recent 100 logged plays for a user.
+
+```
+PlaysRequest request = new PlaysRequest("jakefromstatefarm");
+PlaysResponse response = await bgg.GetPlaysAsync(request);
+PlaysResponse.PlaysCollection collection = response.Result;
+
+foreach (PlaysResponse.Play loggedPlay in collection.Plays)
+{
+    // do something interesting here
+}
+```
+
+### Get all logged plays for a player
+
+This example makes multiple requests to get all the logged plays in batches of 100.
+
+```
+PlaysRequest request = new PlaysRequest("jakefromstatefarm");
+PlaysResponse response = await bgg.GetPlaysAsync(request);
+PlaysResponse.PlaysCollection collection = response.Result;
+
+int pages = (int)(Math.Ceiling(collection.Total / (double)100);
+
+List<PlaysResponse.Play> allPlays = new List<PlaysResponse.Play>();
+allPlays.AddRange(collection.Plays);
+
+// Okay we've got page 1 containing the first 100 logged plays
+for (int i=2; i <= pages; i++) 
+{
+    request = new PlaysRequest("jakefromstatefarm", page: i);
+    // should probably delay for a bit of time to prevent slamming the bgg server with requests    
+    response = await bgg.GetPlaysAsync(request);
+    allPlays.AddRange(response.Collection.Plays);
+}
+
+foreach (PlaysResponse.Play play in allPlays)
+{
+    // do something interesting here
+}
+```
+
+### Get all logged plays of a game
+
+This example gets the most recent 100 logged plays of Carcassonne (#822). This gets all logged plays 
+regardless of user, and could possibly be used to compute game wide statistics.
+
+```
+PlaysRequest request = new PlaysRequest(id: 822);
+PlaysResponse response = await bgg.GetPlaysAsync(request);
+PlaysResponse.PlaysCollection collection = response.Result;
+```
+
+### Get all logged plays of a game for a player
+
+This example gets the most recent 100 logged plays of Carcassonne (#822) for a user.
+
+```
+PlaysRequest request = new PlaysRequest("jakefromstatefarm", 822);
+PlaysResponse response = await bgg.GetPlaysAsync(request);
+PlaysResponse.PlaysCollection collection = response.Result;
+```
+
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
