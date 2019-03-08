@@ -626,6 +626,11 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             #endregion
         }
 
+        public Task<SearchResponse> SearchAsync(SearchRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
         private async Task<XDocument> GetXDocumentAsync(Uri relativeUri)
         {
             Uri requestUrl = new Uri(BaseUrl, relativeUri);
