@@ -20,9 +20,9 @@ namespace BoardGamer.BoardGameGeek
         {
             if (value != null)
             {
-                args.Add(name, value);
+                args.Add(name, Uri.EscapeDataString(value));
             }
-            
+
             return this;
         }
 
@@ -30,7 +30,7 @@ namespace BoardGamer.BoardGameGeek
         {
             if (value.HasValue)
             {
-                args.Add(name, value.Value ? "1" : "0");
+                AddQueryArgument(name, value.Value ? "1" : "0");
             }
             return this;
         }
@@ -39,7 +39,7 @@ namespace BoardGamer.BoardGameGeek
         {
             if (value.HasValue)
             {
-                args.Add(name, value.Value.ToString());
+                AddQueryArgument(name, value.Value.ToString());
             }
             return this;
         }
@@ -48,7 +48,7 @@ namespace BoardGamer.BoardGameGeek
         {
             if (value.HasValue)
             {
-                args.Add(name, value.Value.ToString(format));
+                AddQueryArgument(name, value.Value.ToString(format));
             }
             return this;
         }
@@ -57,7 +57,7 @@ namespace BoardGamer.BoardGameGeek
         {
             if (collecton != null)
             {
-                args.Add(name, String.Join(",", collecton.Select(i => i.ToString())));
+                AddQueryArgument(name, String.Join(",", collecton.Select(i => i.ToString())));
             }
             return this;
         }
