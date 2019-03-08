@@ -195,6 +195,23 @@ PlaysResponse response = await bgg.GetPlaysAsync(request);
 PlaysResponse.PlaysCollection collection = response.Result;
 ```
 
+### Search for an item by name
+
+This example searches the boardgamegeek.com database for a board game by its name then loads the game information.
+
+```
+SearchRequest sRequest = new SearchRequest("Brass: Birmingham");
+SearchResponse sResponse = await bgg.SearchAsync(sRequest);
+SearchResponse.Item gameRef = sResponse.Result.Items.FirstOrDefault();
+
+if (item != null)
+{
+    ThingRequest tRequest = new ThingRequest(new int[] { item.Id });
+    ThingResponse tResponse = await bgg.GetThingAsync(tRequest);
+    ThingResponse.Item game = tResponse.Result.Items.FirstOrDefault();
+}
+
+```
 
 ## License
 
