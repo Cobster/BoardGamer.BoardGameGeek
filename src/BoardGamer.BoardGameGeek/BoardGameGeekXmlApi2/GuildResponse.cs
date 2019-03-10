@@ -44,7 +44,20 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                 : base(members)
             {}
 
+            /// <summary>
+            /// The total number of members in the guild.
+            /// </summary>
+            /// <remarks>
+            /// This is mapped from the members element's count attribute.
+            /// </remarks>
             public int Total { get; set; }
+
+            /// <summary>
+            /// The current page of guild members.
+            /// </summary>
+            /// <remarks>
+            /// Each page contains 25 records.
+            /// </remarks>
             public int Page { get; set; }
         }
 
