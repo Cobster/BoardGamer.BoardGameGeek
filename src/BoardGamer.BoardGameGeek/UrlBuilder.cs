@@ -68,7 +68,8 @@ namespace BoardGamer.BoardGameGeek
             sb.Append(path);
             if (args.Count > 0)
             {
-                sb.Append(args.Aggregate("?", (qs, arg) => $"{qs}&{arg.Key}={arg.Value}"));
+                sb.Append("?").Append(String.Join("&", args.Select((x) => $"{x.Key}={x.Value}")));
+                //sb.Append(args.Aggregate("?", (qs, arg) => $"{qs}&{arg.Key}={arg.Value}"));
             }
             return new Uri(sb.ToString(), UriKind.Relative);
         }
