@@ -77,7 +77,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.Equal(90, game.MaxPlayingTime);
             Assert.Equal(13, game.MinAge);
             Assert.Equal(3, game.Polls.Count);
-            Assert.Equal(38, game.Links.Count);
+            Assert.Equal(39, game.Links.Count);
             Assert.Equal(7, game.Versions.Count);
         }
 
@@ -121,7 +121,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.NotNull(game.Comments);
 
             Assert.Equal(1, game.Comments.Page);
-            Assert.Equal(1970, game.Comments.Total); // subject to change
+            Assert.Equal(1971, game.Comments.Total); // subject to change
             Assert.Equal(100, game.Comments.Count);
 
             // Not 100% sure of the sort order on comments. 
@@ -144,7 +144,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.NotNull(game.RatingComments);
 
             Assert.Equal(1, game.RatingComments.Page);
-            Assert.Equal(9825, game.RatingComments.Total); // subject to change
+            Assert.Equal(9838, game.RatingComments.Total); // subject to change
             Assert.Equal(100, game.RatingComments.Count);
 
             // Not 100% sure of the sort order on comments. 
@@ -235,7 +235,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.Single(collection.Plays);
 
             PlaysResponse.Play play = collection.Plays[0];
-            Assert.Equal(3425125, play.Id);
+            Assert.Equal(34275125, play.Id);
             Assert.Equal(new DateTime(2019, 3, 7), play.Date);
             Assert.Equal(1, play.Quantity);
             Assert.Equal(35, play.Length);
@@ -293,6 +293,14 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.Equal(188167, item.Id);
             Assert.Equal("Brass", item.Name);
             Assert.Null(item.YearPublished);
+        }
+
+        [Fact]
+        public async Task Should_retrieve_guild_information()
+        {
+            GuildRequest request = new GuildRequest(1805, members: true);
+            GuildResponse response = await bgg.GetGuildAsync(request);
+            Assert.True(response.Succeeded);
         }
     }
 }
