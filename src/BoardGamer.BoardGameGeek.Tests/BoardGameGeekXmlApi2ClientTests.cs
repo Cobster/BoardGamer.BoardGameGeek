@@ -302,5 +302,15 @@ namespace BoardGamer.BoardGameGeek.Tests
             GuildResponse response = await bgg.GetGuildAsync(request);
             Assert.True(response.Succeeded);
         }
+
+        [Fact]
+        public async Task Should_retrieve_hot_items()
+        {
+            HotItemsRequest request = new HotItemsRequest("boardgame");
+            HotItemsResponse response = await bgg.GetHotItemsAsync(request);
+            
+            // manually verify
+
+        }
     }
 }

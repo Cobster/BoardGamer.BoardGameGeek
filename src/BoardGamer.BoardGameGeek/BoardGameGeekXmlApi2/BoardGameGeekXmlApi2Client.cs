@@ -194,6 +194,48 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             #endregion
         }
 
+        public async Task<HotItemsResponse> GetHotItemsAsync(HotItemsRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            XDocument xdoc = await GetXDocumentAsync(request.RelativeUrl).ConfigureAwait(false);
+            HotItemsResponse response = Map(xdoc);
+            return response;
+
+            #region Helpers 
+
+            HotItemsResponse Map(XDocument document)
+            {
+                return new HotItemsResponse(MapItems(document.Root));
+            }
+
+            HotItemsResponse.ItemCollection MapItems(XElement itemsEl)
+            {
+                var items = itemsEl.Elements("item").Select(MapItem);
+
+                return new HotItemsResponse.ItemCollection(items)
+                {
+                    TermsOfUse = itemsEl.AttributeValue("termsofuse")
+                };
+            }
+
+            HotItemsResponse.Item MapItem(XElement itemEl)
+            {
+                return new HotItemsResponse.Item
+                {
+                    Id = itemEl.AttributeValueAsInt32("id"),
+                    Rank = itemEl.AttributeValueAsInt32("rank"),
+                    Thumbnail = itemEl.Element("thumbnail").AttributeValue(),
+                    Name = itemEl.Element("name").AttributeValue(),
+                    YearPublished = itemEl.Element("yearpublished").AttributeValueAsNullableInt32()
+                };
+            }
+
+            #endregion
+        }
+
+
         public async Task<PlaysResponse> GetPlaysAsync(PlaysRequest request)
         {
             if (request == null)

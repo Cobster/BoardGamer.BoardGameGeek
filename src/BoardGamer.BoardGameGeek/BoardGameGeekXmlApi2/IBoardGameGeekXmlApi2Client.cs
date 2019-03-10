@@ -18,6 +18,8 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         /// <returns>A <see cref="GuildResponse"/> object</returns>
         Task<GuildResponse> GetGuildAsync(GuildRequest request);
 
+        Task<HotItemsResponse> GetHotItemsAsync(HotItemsRequest request);
+
         /// <summary>
         /// Get the details about a user's logged plays.
         /// </summary>
