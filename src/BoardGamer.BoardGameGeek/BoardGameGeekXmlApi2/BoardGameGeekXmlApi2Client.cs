@@ -127,6 +127,73 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             #endregion
         }
 
+        public async Task<GuildResponse> GetGuildAsync(GuildRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            XDocument xdoc = await GetXDocumentAsync(request.RelativeUrl).ConfigureAwait(false);
+            GuildResponse response = Map(xdoc);
+            return response;
+
+            #region Helpers 
+
+            GuildResponse Map(XDocument document)
+            {
+                return new GuildResponse(MapGuild(document.Root));
+            }
+
+            GuildResponse.Guild MapGuild(XElement guildEl)
+            {
+                return new GuildResponse.Guild
+                {
+                    Id = guildEl.AttributeValueAsInt32("id"),
+                    Name = guildEl.AttributeValue("name"),
+                    Created = guildEl.AttributeValueAsDateTimeOffset("created"),
+                    TermsOfUse = guildEl.AttributeValue("termsofuse"),
+                    Category = guildEl.ElementValue("category"),
+                    Website = guildEl.ElementValue("website"),
+                    Manager = guildEl.ElementValue("manager"),
+                    Description = guildEl.ElementValue("description"),
+                    Location = MapLocation(guildEl.Element("location")),
+                    Members = MapMembers(guildEl.Element("members"))
+                };
+            }
+
+            GuildResponse.Location MapLocation(XElement locEl)
+            {
+                return new GuildResponse.Location
+                {
+                    Addr1 = locEl.ElementValue("addr1"),
+                    Addr2 = locEl.ElementValue("addr2"),
+                    City = locEl.ElementValue("city"),
+                    StateOrProvince = locEl.ElementValue("stateorprovince"),
+                    PostalCode = locEl.ElementValue("postalcode"),
+                    Country = locEl.ElementValue("country")
+                };
+            }
+
+            GuildResponse.MemberCollection MapMembers(XElement membersEl)
+            {
+                return new GuildResponse.MemberCollection(membersEl.Elements("member").Select(MapMember))
+                {
+                    Total = membersEl.AttributeValueAsInt32("count"),
+                    Page = membersEl.AttributeValueAsInt32("page")
+                };
+            }
+
+            GuildResponse.Member MapMember(XElement memberEl)
+            {
+                return new GuildResponse.Member
+                {
+                    Name = memberEl.AttributeValue("name"),
+                    Date = memberEl.AttributeValueAsDateTimeOffset("date")
+                };
+            }
+
+            #endregion
+        }
+
         public async Task<PlaysResponse> GetPlaysAsync(PlaysRequest request)
         {
             if (request == null)
