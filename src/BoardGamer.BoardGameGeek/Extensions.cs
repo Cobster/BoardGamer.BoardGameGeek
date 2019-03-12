@@ -23,6 +23,12 @@ namespace BoardGamer.BoardGameGeek
 
         public static bool AttributeValueAsBoolean(this XElement element, string attributeName = "value")
         {
+            string value = element.AttributeValue(attributeName);
+            if (Boolean.TryParse(value, out bool result))
+            {
+                return result;
+            }
+
             return element.AttributeValueAsNullableInt32(attributeName).GetValueOrDefault() == 1;
         }
 
