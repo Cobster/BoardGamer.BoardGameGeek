@@ -732,6 +732,53 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             #endregion
         }
 
+        public async Task<ThreadsResponse> GetThreadsAsync(ThreadsRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            XDocument xdoc = await GetXDocumentAsync(request.RelativeUrl).ConfigureAwait(false);
+            ThreadsResponse response = Map(xdoc);
+            return response;
+
+            #region Helpers 
+
+            ThreadsResponse Map(XDocument document)
+            {
+                return new ThreadsResponse(MapThread(document.Root));
+            }
+
+            ThreadsResponse.Thread MapThread(XElement threadEl)
+            {
+                return new ThreadsResponse.Thread
+                {
+                    Id = threadEl.AttributeValueAsInt32("id"),
+                    NumArticles = threadEl.AttributeValueAsInt32("numarticles"),
+                    Link = threadEl.AttributeValue("link"),
+                    TermsOfUse = threadEl.AttributeValue("termsofuse"),
+                    Subject = threadEl.ElementValue("subject"),
+                    Articles = threadEl.Descendants("article").Select(MapArticle).ToList()
+                };
+            }
+
+            ThreadsResponse.Article MapArticle(XElement articleEl)
+            {
+                return new ThreadsResponse.Article
+                {
+                    Id = articleEl.AttributeValueAsInt32("id"),
+                    UserName = articleEl.AttributeValue("username"),
+                    Link = articleEl.AttributeValue("link"),
+                    PostDate = articleEl.AttributeValueAsDateTimeOffset("postdate"),
+                    EditDate = articleEl.AttributeValueAsDateTimeOffset("editdate"),
+                    NumEdits = articleEl.AttributeValueAsInt32("numedits"),
+                    Subject = articleEl.ElementValue("subject"),
+                    Body = articleEl.ElementValue("body")
+                };
+            }
+
+            #endregion
+        }
+
         public async Task<UserResponse> GetUserAsync(UserRequest request)
         {
             if (request == null)
