@@ -121,7 +121,6 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.NotNull(game.Comments);
 
             Assert.Equal(1, game.Comments.Page);
-            Assert.Equal(1971, game.Comments.Total); // subject to change
             Assert.Equal(100, game.Comments.Count);
 
             // Not 100% sure of the sort order on comments. 
@@ -144,7 +143,6 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.NotNull(game.RatingComments);
 
             Assert.Equal(1, game.RatingComments.Page);
-            Assert.Equal(9838, game.RatingComments.Total); // subject to change
             Assert.Equal(100, game.RatingComments.Count);
 
             // Not 100% sure of the sort order on comments. 
