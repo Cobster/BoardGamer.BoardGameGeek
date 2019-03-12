@@ -38,6 +38,8 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         /// <returns>A single or set of things.</returns>
         Task<ThingResponse> GetThingAsync(ThingRequest request);
 
+        Task<ThreadsResponse> GetThreadsAsync(ThreadsRequest request);
+
         /// <summary>
         /// Gets the basic public profile information about a user by username from boardgamegeek.com
         /// </summary>

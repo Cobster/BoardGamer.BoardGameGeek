@@ -312,6 +312,14 @@ namespace BoardGamer.BoardGameGeek.Tests
         }
 
         [Fact]
+        public async Task Should_get_a_thread_by_id()
+        {
+            ThreadsRequest request = new ThreadsRequest(2155876);
+            ThreadsResponse response = await bgg.GetThreadsAsync(request);
+            Assert.NotNull(response.Result);
+        }
+
+        [Fact]
         public async Task Should_retrieve_guild_information()
         {
             GuildRequest request = new GuildRequest(1805, members: true);
