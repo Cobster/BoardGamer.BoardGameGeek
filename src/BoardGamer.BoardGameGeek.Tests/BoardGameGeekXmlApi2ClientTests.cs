@@ -300,7 +300,14 @@ namespace BoardGamer.BoardGameGeek.Tests
         {
             ForumListRequest request = new ForumListRequest(172818, "thing");
             ForumListResponse response = await bgg.GetForumListAsync(request);
+            Assert.NotNull(response.Result);
+        }
 
+        [Fact]
+        public async Task Should_get_a_forum_by_id()
+        {
+            ForumsRequest request = new ForumsRequest(1565736);
+            ForumsResponse response = await bgg.GetForumsAsync(request);
             Assert.NotNull(response.Result);
         }
 
@@ -317,9 +324,7 @@ namespace BoardGamer.BoardGameGeek.Tests
         {
             HotItemsRequest request = new HotItemsRequest("boardgame");
             HotItemsResponse response = await bgg.GetHotItemsAsync(request);
-            
-            // manually verify
-
+            Assert.NotNull(response.Result);
         }
     }
 }

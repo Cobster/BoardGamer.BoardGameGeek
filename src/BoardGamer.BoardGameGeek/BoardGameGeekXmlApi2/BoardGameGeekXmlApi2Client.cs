@@ -171,6 +171,52 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             #endregion
         }
 
+        public async Task<ForumsResponse> GetForumsAsync(ForumsRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            XDocument xdoc = await GetXDocumentAsync(request.RelativeUrl).ConfigureAwait(false);
+            ForumsResponse response = Map(xdoc);
+            return response;
+
+            #region Helpers 
+
+            ForumsResponse Map(XDocument document)
+            {
+                return new ForumsResponse(MapForum(document.Root));
+            }
+
+            ForumsResponse.Forum MapForum(XElement forumEl)
+            {
+                return new ForumsResponse.Forum
+                {
+                    Id = forumEl.AttributeValueAsInt32("id"),
+                    Title = forumEl.AttributeValue("title"),
+                    NumPosts = forumEl.AttributeValueAsInt32("numposts"),
+                    NumThreads = forumEl.AttributeValueAsInt32("numthreads"),
+                    LastPostDate = forumEl.AttributeValueAsNullableDateTimeOffset("lastpostdate"),
+                    NoPosting = forumEl.AttributeValueAsBoolean("noposting"),
+                    TermsOfUse = forumEl.AttributeValue("termsofuse"),
+                    Threads = forumEl.Descendants("thread").Select(MapThread).ToList()
+                };
+            }
+
+            ForumsResponse.Thread MapThread(XElement threadEl)
+            {
+                return new ForumsResponse.Thread
+                {
+                    Id = threadEl.AttributeValueAsInt32("id"),
+                    Subject = threadEl.AttributeValue("subject"),
+                    Author = threadEl.AttributeValue("author"),
+                    NumArticles = threadEl.AttributeValueAsInt32("numarticles"),
+                    PostDate = threadEl.AttributeValueAsDateTimeOffset("postdate"),
+                    LastPostDate = threadEl.AttributeValueAsDateTimeOffset("lastpostdate")
+                };
+            }
+
+            #endregion
+        }
 
         public async Task<GuildResponse> GetGuildAsync(GuildRequest request)
         {
