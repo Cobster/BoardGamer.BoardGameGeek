@@ -28,11 +28,11 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         public class Item
         {
             public string ObjectType { get; set; }
-            public string ObjectId { get; set; }
+            public int ObjectId { get; set; }
             public string SubType { get; set; }
-            public string CollectionId { get; set; }
+            public int CollectionId { get; set; }
             public string Name { get; set; }
-            public string YearPublished { get; set; }
+            public int YearPublished { get; set; }
             public string Image { get; set; }
             public string Thumbnail { get; set; }
             public Stats Stats { get; set; }
