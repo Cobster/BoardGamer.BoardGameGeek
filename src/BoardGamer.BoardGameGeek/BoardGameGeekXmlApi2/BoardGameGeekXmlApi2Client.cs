@@ -50,11 +50,11 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                        select new CollectionResponse.Item
                        {
                            ObjectType = item.AttributeValue("objecttype"),
-                           ObjectId = item.AttributeValue("objectid"),
+                           ObjectId = item.AttributeValueAsInt32("objectid"),
                            SubType = item.AttributeValue("subtype"),
-                           CollectionId = item.AttributeValue("collid"),
+                           CollectionId = item.AttributeValueAsInt32("collid"),
                            Name = item.ElementValue("name"),
-                           YearPublished = item.ElementValue("yearpublished"),
+                           YearPublished = item.AttributeValueAsInt32("yearpublished"),
                            Image = item.ElementValue("image"),
                            Thumbnail = item.ElementValue("thumbnail"),
                            Stats = MapStats(item.Element("stats")),
