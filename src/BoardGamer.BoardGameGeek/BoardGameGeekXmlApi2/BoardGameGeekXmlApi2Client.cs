@@ -127,6 +127,58 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             #endregion
         }
 
+        public async Task<FamilyResponse> GetFamilyAsync(FamilyRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            XDocument xdoc = await GetXDocumentAsync(request.RelativeUrl).ConfigureAwait(false);
+            FamilyResponse response = Map(xdoc);
+            return response;
+
+            #region Helpers 
+
+            FamilyResponse Map(XDocument document)
+            {
+                return new FamilyResponse(MapItemCollection(document.Root));
+            }
+
+            FamilyResponse.ItemCollection MapItemCollection(XElement itemsEl)
+            {
+                return new FamilyResponse.ItemCollection(itemsEl.Elements("item").Select(MapItem))
+                {
+                    TermsOfUse = itemsEl.AttributeValue("termsofuse")
+                };
+            }
+
+            FamilyResponse.Item MapItem(XElement itemEl)
+            {
+                return new FamilyResponse.Item
+                {
+                    Id = itemEl.AttributeValueAsInt32("id"),
+                    Type = itemEl.AttributeValue("type"),
+                    Thumbnail = itemEl.ElementValue("thumbnail"),
+                    Image = itemEl.ElementValue("image"),
+                    Name = itemEl.Element("name").AttributeValue(),
+                    Description = itemEl.ElementValue("description"),
+                    Links = itemEl.Elements("link").Select(MapLink).ToList()
+                };
+            }
+
+            FamilyResponse.Link MapLink(XElement linkEl)
+            {
+                return new FamilyResponse.Link
+                {
+                    Type = linkEl.AttributeValue("type"),
+                    Id = linkEl.AttributeValueAsInt32("id"),
+                    Value = linkEl.AttributeValue(),
+                    Inbound = linkEl.AttributeValueAsBoolean("inbound")
+                };
+            }
+
+            #endregion
+        }
+
         public async Task<ForumListResponse> GetForumListAsync(ForumListRequest request)
         {
             if (request == null)

@@ -334,5 +334,13 @@ namespace BoardGamer.BoardGameGeek.Tests
             HotItemsResponse response = await bgg.GetHotItemsAsync(request);
             Assert.NotNull(response.Result);
         }
+
+        [Fact]
+        public async Task Should_retrieve_a_family_item()
+        {
+            FamilyRequest request = new FamilyRequest(86, "boardgamefamily");
+            FamilyResponse response = await bgg.GetFamilyAsync(request);
+            Assert.NotNull(response.Result);
+        }
     }
 }

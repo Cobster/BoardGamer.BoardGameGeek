@@ -11,7 +11,25 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         /// <returns>An object containing the user's collection details.</returns>
         Task<CollectionResponse> GetCollectionAsync(CollectionRequest request);
 
+        /// <summary>
+        /// Gets information about a family of board games, rpgs, or rpg periodicals.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>An object containing information about the family and links to related items.</returns>
+        Task<FamilyResponse> GetFamilyAsync(FamilyRequest request);
+
+        /// <summary>
+        /// Gets a list of forums related to a specified thing or family.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>An response object containing a list of forums.</returns>
         Task<ForumListResponse> GetForumListAsync(ForumListRequest request);
+
+        /// <summary>
+        /// Gets details about a specific forum and its threads.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>A response object containing forum information.</returns>
         Task<ForumsResponse> GetForumsAsync(ForumsRequest request);
 
         /// <summary>
@@ -21,6 +39,11 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         /// <returns>A <see cref="GuildResponse"/> object</returns>
         Task<GuildResponse> GetGuildAsync(GuildRequest request);
 
+        /// <summary>
+        /// Gets a list of items that are currently hot.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>A response object containing the list of hot items.</returns>
         Task<HotItemsResponse> GetHotItemsAsync(HotItemsRequest request);
 
         /// <summary>
@@ -38,6 +61,11 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         /// <returns>A single or set of things.</returns>
         Task<ThingResponse> GetThingAsync(ThingRequest request);
 
+        /// <summary>
+        /// Gets a specific forum thread by id.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>A response object containing forum thread information.</returns>
         Task<ThreadsResponse> GetThreadsAsync(ThreadsRequest request);
 
         /// <summary>
