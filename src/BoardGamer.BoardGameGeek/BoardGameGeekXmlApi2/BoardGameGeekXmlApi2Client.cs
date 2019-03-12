@@ -851,13 +851,14 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             {
                 return new UserResponse.User
                 {
-                    Id = userEl.Attribute("id")?.Value,
-                    Name = userEl.Attribute("name").Value,
+                    Id = userEl.AttributeValueAsInt32("id"),
+                    Name = userEl.AttributeValue("name"),
+                    TermsOfUse = userEl.AttributeValue("termsofuse"),
                     FirstName = userEl.Element("firstname").AttributeValue(),
                     LastName = userEl.Element("lastname").AttributeValue(),
                     AvatarLink = userEl.Element("avatarlink").AttributeValue(),
-                    YearRegistered = userEl.Element("yearregistered").AttributeValue(),
-                    LastLogin = userEl.Element("lastlogin").AttributeValue(),
+                    YearRegistered = userEl.Element("yearregistered").AttributeValueAsInt32(),
+                    LastLogin = userEl.Element("lastlogin").AttributeValueAsDateTime(),
                     StateOrProvince = userEl.Element("stateorprovince").AttributeValue(),
                     Country = userEl.Element("country").AttributeValue(),
                     WebAddress = userEl.Element("webaddress").AttributeValue(),
@@ -866,8 +867,8 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                     PsnAccount = userEl.Element("psnaccount").AttributeValue(),
                     BattleNetAccount = userEl.Element("battlenetaccount").AttributeValue(),
                     SteamAccount = userEl.Element("steamaccount").AttributeValue(),
-                    TradeRating = userEl.Element("traderating").AttributeValue(),
-                    MarketRating = userEl.Element("marketrating").AttributeValue(),
+                    TradeRating = userEl.Element("traderating").AttributeValueAsInt32(),
+                    MarketRating = userEl.Element("marketrating").AttributeValueAsInt32(),
                     Buddies = MapBuddies(userEl).ToList(),
                     Guilds = MapGuilds(userEl).ToList(),
                     Top = MapListItems(userEl, "top").ToList(),
@@ -885,7 +886,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                 return from buddy in userEl.Descendants("buddy")
                        select new UserResponse.Buddy
                        {
-                           Id = buddy.AttributeValue("id"),
+                           Id = buddy.AttributeValueAsInt32("id"),
                            Name = buddy.AttributeValue("name")
                        };
             }
@@ -900,7 +901,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                 return from guild in userEl.Descendants("guild")
                        select new UserResponse.Guild
                        {
-                           Id = guild.AttributeValue("id"),
+                           Id = guild.AttributeValueAsInt32("id"),
                            Name = guild.AttributeValue("name")
                        };
             }
@@ -915,9 +916,9 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                 return from item in xdoc.XPathSelectElements($"/user/{list}/item")
                        select new UserResponse.Item
                        {
-                           Rank = item.AttributeValue("rank"),
+                           Rank = item.AttributeValueAsInt32("rank"),
                            Type = item.AttributeValue("type"),
-                           Id = item.AttributeValue("id"),
+                           Id = item.AttributeValueAsInt32("id"),
                            Name = item.AttributeValue("name")
                        };
             }
