@@ -127,6 +127,51 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             #endregion
         }
 
+        public async Task<ForumListResponse> GetForumListAsync(ForumListRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            XDocument xdoc = await GetXDocumentAsync(request.RelativeUrl).ConfigureAwait(false);
+            ForumListResponse response = Map(xdoc);
+            return response;
+
+            #region Helpers 
+
+            ForumListResponse Map(XDocument document)
+            {
+                return new ForumListResponse(MapForums(document.Root));
+            }
+
+            ForumListResponse.Forums MapForums(XElement root)
+            {
+                return new ForumListResponse.Forums(root.Elements("forum").Select(MapForum))
+                {
+                    Id = root.AttributeValueAsInt32("id"),
+                    Type = root.AttributeValue("type"),
+                    TermsOfUse = root.AttributeValue("termsofuse")
+                };
+            }
+
+            ForumListResponse.Forum MapForum(XElement forumEl)
+            {
+                return new ForumListResponse.Forum
+                {
+                    Id = forumEl.AttributeValueAsInt32("id"),
+                    GroupId = forumEl.AttributeValueAsInt32("groupid"),
+                    Title = forumEl.AttributeValue("title"),
+                    NoPosting = forumEl.AttributeValueAsBoolean("noposting"),
+                    Description = forumEl.AttributeValue("description"),
+                    NumThreads = forumEl.AttributeValueAsInt32("numthreads"),
+                    NumPosts = forumEl.AttributeValueAsInt32("numposts"),
+                    LastPostDate = forumEl.AttributeValueAsNullableDateTimeOffset("lastpostdate")
+                };
+            }
+
+            #endregion
+        }
+
+
         public async Task<GuildResponse> GetGuildAsync(GuildRequest request)
         {
             if (request == null)

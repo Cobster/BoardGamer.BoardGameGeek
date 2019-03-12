@@ -296,6 +296,15 @@ namespace BoardGamer.BoardGameGeek.Tests
         }
 
         [Fact]
+        public async Task Should_get_forum_list()
+        {
+            ForumListRequest request = new ForumListRequest(172818, "thing");
+            ForumListResponse response = await bgg.GetForumListAsync(request);
+
+            Assert.NotNull(response.Result);
+        }
+
+        [Fact]
         public async Task Should_retrieve_guild_information()
         {
             GuildRequest request = new GuildRequest(1805, members: true);

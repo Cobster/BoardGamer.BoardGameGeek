@@ -11,6 +11,8 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         /// <returns>An object containing the user's collection details.</returns>
         Task<CollectionResponse> GetCollectionAsync(CollectionRequest request);
 
+        Task<ForumListResponse> GetForumListAsync(ForumListRequest request);
+
         /// <summary>
         /// Gets the details about a guild.
         /// </summary>
