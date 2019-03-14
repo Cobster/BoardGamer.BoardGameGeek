@@ -38,9 +38,12 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 
             CollectionResponse.ItemCollection MapItemCollection(XElement itemsEl)
             {
-                return new CollectionResponse.ItemCollection(
-                    MapItems(itemsEl),
-                    itemsEl.AttributeValueAsDateTime("pubdate"));
+                return new CollectionResponse.ItemCollection(MapItems(itemsEl))
+                {
+                    TotalItems = itemsEl.AttributeValueAsInt32("totalitems"),
+                    PublishDate = itemsEl.AttributeValueAsDateTime("pubdate"),
+                    TermsOfUse = itemsEl.AttributeValue("termsofuse")
+                };
             }
 
             IEnumerable<CollectionResponse.Item> MapItems(XElement itemsEl)
