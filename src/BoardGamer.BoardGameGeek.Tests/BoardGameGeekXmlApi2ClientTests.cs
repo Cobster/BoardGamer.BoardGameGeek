@@ -1,4 +1,5 @@
 using BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2;
+using BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2.Extensions;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -9,6 +10,7 @@ namespace BoardGamer.BoardGameGeek.Tests
 {
     public class BoardGameGeekClientTests
     {
+        private static readonly string USERNAME = "jakefromstatefarm";
         private readonly IBoardGameGeekXmlApi2Client bgg;
 
         public BoardGameGeekClientTests()
@@ -19,18 +21,18 @@ namespace BoardGamer.BoardGameGeek.Tests
         [Fact]
         public async Task Should_retrieve_user_by_boardgamegeek_username()
         {
-            UserResponse response = await bgg.GetUserAsync(new UserRequest("jakefromstatefarm", buddies: true, hot: true, top: true));
+            UserResponse response = await bgg.GetUserAsync(new UserRequest(USERNAME, buddies: true, hot: true, top: true));
 
             Assert.True(response.Succeeded);
 
             UserResponse.User user = response.Result;
 
             Assert.NotNull(user);
-            Assert.Equal("1266617", user.Id);
-            Assert.Equal("jakefromstatefarm", user.Name);
+            Assert.Equal(1266617, user.Id);
+            Assert.Equal(USERNAME, user.Name);
             Assert.Equal("Jake", user.FirstName);
             Assert.Equal("Bruun", user.LastName);
-            Assert.Equal("2016", user.YearRegistered);
+            Assert.Equal(2016, user.YearRegistered);
             Assert.Equal("Oregon", user.StateOrProvince);
             Assert.Equal("United States", user.Country);
             Assert.Equal(4, user.Buddies.Count);
@@ -42,7 +44,7 @@ namespace BoardGamer.BoardGameGeek.Tests
         public async Task Should_retrieve_users_game_collection()
         {
             CollectionResponse response = await bgg.GetCollectionAsync(new CollectionRequest(
-                "jakefromstatefarm",
+                USERNAME,
                 stats: true));
 
             Assert.True(response.Succeeded);
@@ -219,13 +221,13 @@ namespace BoardGamer.BoardGameGeek.Tests
         [Fact]
         public async Task Should_retrieve_logged_plays_for_user()
         {
-            PlaysResponse response = await bgg.GetPlaysAsync(new PlaysRequest("jakefromstatefarm"));
+            PlaysResponse response = await bgg.GetPlaysAsync(new PlaysRequest(USERNAME));
             Assert.True(response.Succeeded);
 
             PlaysResponse.PlaysCollection collection = response.Result;
 
             Assert.NotNull(collection);
-            Assert.Equal("jakefromstatefarm", collection.Username);
+            Assert.Equal(USERNAME, collection.Username);
             Assert.Equal(1266617, collection.UserId);
             Assert.Equal(1, collection.Total);
             Assert.Equal(1, collection.Page);
@@ -250,7 +252,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.Contains("boardgame", item.SubTypes);
 
             PlaysResponse.Player player1 = play.Players[0];
-            Assert.Equal("jakefromstatefarm", player1.Username);
+            Assert.Equal(USERNAME, player1.Username);
             Assert.Equal(1266617, player1.UserId);
             Assert.Equal("Jake Bruun", player1.Name);
             Assert.Equal("0", player1.StartPosition);
@@ -339,6 +341,29 @@ namespace BoardGamer.BoardGameGeek.Tests
             FamilyRequest request = new FamilyRequest(86, "boardgamefamily");
             FamilyResponse response = await bgg.GetFamilyAsync(request);
             Assert.NotNull(response.Result);
+        }
+
+        [Fact]
+        public async Task Should_get_game_by_id()
+        {
+            var game = await bgg.GetBoardGameAsync(43015);
+            Assert.Equal("Hansa Teutonica", game.Name);
+            Assert.Equal(2009, game.YearPublished);
+        }
+
+        [Fact]
+        public async Task Should_get_game_collection_by_username()
+        {
+            var collection = await bgg.GetCollectionAsync(USERNAME);
+            Assert.Equal(55, collection.Count);
+        }
+
+        [Fact]
+        public async Task Should_get_user_profile_by_username()
+        {
+            var profile = await bgg.GetUserAsync(USERNAME);
+            Assert.Equal(USERNAME, profile.Name);
+            Assert.Equal(1266617, profile.Id);
         }
     }
 }

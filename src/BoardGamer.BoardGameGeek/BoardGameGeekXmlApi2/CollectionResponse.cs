@@ -16,13 +16,13 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 
         public class ItemCollection : List<Item>
         {
-            public ItemCollection(IEnumerable<Item> items, DateTimeOffset publishDate)
+            public ItemCollection(IEnumerable<Item> items)
                 : base(items)
-            {
-                this.PublishDate = publishDate;
-            }
+            {}
 
             public DateTimeOffset PublishDate { get; set; }
+            public int TotalItems { get; set; }
+            public string TermsOfUse { get; set; }
         }
 
         public class Item
