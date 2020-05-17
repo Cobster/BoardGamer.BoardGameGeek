@@ -16,7 +16,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             bool? exact = null)
         {
             Query = query;
-            Type = null;
+            Type = type;
             Exact = exact;
             RelativeUrl = BuildRelativeUrl();
         }
