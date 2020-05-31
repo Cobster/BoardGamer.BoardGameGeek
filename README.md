@@ -94,6 +94,22 @@ foreach (CollectionResponse.Item item in collection) {
 }
 ```
 
+If you are retrieving a large collection, this request could take a long time to complete. The library try to handle
+this internally by performing retries after a delay. By default, this will retry every 500 milliseconds up to
+a maximum of 20 times. If this still isn't working, try configuring your own retry values.
+
+```
+BoardGameGeekXmlApi2ClientOptions customOptions = new BoardGameGeekXmlApi2ClientOptions {
+    MaxRetries = 50,
+    Delay = TimeSpan.FromSeconds(1)
+};
+
+IBoardGameGeekXmlApi2Client bgg = new BoardGameGeekXmlApi2Client(new HttpClient(), customOptions);
+
+```
+
+
+
 ### Get a user's game collection including stats for each game
 
 This example makes a collection request that includes the stats for each game and uses it
