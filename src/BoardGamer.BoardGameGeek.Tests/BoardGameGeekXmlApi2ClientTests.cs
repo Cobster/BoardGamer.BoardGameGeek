@@ -52,7 +52,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             CollectionResponse.ItemCollection items = response.Result;
 
             Assert.NotNull(items);
-            Assert.Equal(55, items.Count);
+            Assert.Equal(56, items.Count);
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.NotNull(game.Thumbnail);
             Assert.NotNull(game.Image);
             Assert.Equal("Above and Below", game.Name);
-            Assert.Equal(4, game.AlternateNames.Count);
+            Assert.Equal(6, game.AlternateNames.Count);
             Assert.StartsWith("Your last village was ransacked by barbarians.", game.Description);
             Assert.Equal(2015, game.YearPublished);
             Assert.Equal(2, game.MinPlayers);
@@ -79,8 +79,8 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.Equal(90, game.MaxPlayingTime);
             Assert.Equal(13, game.MinAge);
             Assert.Equal(3, game.Polls.Count);
-            Assert.Equal(39, game.Links.Count);
-            Assert.Equal(7, game.Versions.Count);
+            Assert.Equal(43, game.Links.Count);
+            Assert.Equal(9, game.Versions.Count);
         }
 
         [Fact]
@@ -92,11 +92,11 @@ namespace BoardGamer.BoardGameGeek.Tests
             ThingResponse.Item game = response.Result.First();
 
             Assert.Equal(15, game.Videos.Count);
-            Assert.Equal(94, game.Videos.Total);
+            Assert.Equal(103, game.Videos.Total);
 
             ThingResponse.Video video = game.Videos[5];
 
-            Assert.Equal("How to Play Above and Below", video.Title);
+            //Assert.Equal("How to Play Above and Below", video.Title);
         }
 
         [Fact]
@@ -170,7 +170,7 @@ namespace BoardGamer.BoardGameGeek.Tests
 
             Assert.Equal(new DateTimeOffset(2016, 1, 16, 20, 08, 34, 0, TimeSpan.FromHours(0)), listing.ListDate);
             Assert.Equal("EUR", listing.Currency);
-            Assert.Equal(45.90, listing.Price);
+            Assert.Equal(51.95, listing.Price);
             Assert.Equal("new", listing.Condition);
             Assert.Equal("weight: 1760 grams + packaging", listing.Notes);
             Assert.Equal("https://boardgamegeek.com/geekmarket/product/869188", listing.Link);

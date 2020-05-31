@@ -14,10 +14,28 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         public static readonly Uri BaseUrl = new Uri("https://www.boardgamegeek.com/xmlapi2/");
 
         private readonly HttpClient http;
+        private readonly int maxRetries;
+        private readonly int delayMs;
 
         public BoardGameGeekXmlApi2Client(HttpClient http)
+            : this(http, BoardGameGeekXmlApi2ClientOptions.Default)
         {
+        }
+
+        public BoardGameGeekXmlApi2Client(HttpClient http, BoardGameGeekXmlApi2ClientOptions options = null)
+        {
+            if (http == null)
+            {
+                throw new ArgumentNullException(nameof(http));
+            }
+            if (options == null)
+            {
+                options = BoardGameGeekXmlApi2ClientOptions.Default;
+            }
+
             this.http = http;
+            this.maxRetries = options.MaxRetries >= 0 ? options.MaxRetries : 0;
+            this.delayMs = options.Delay >= TimeSpan.Zero ? Convert.ToInt32(options.Delay.TotalMilliseconds) : 0;
         }
 
         public async Task<CollectionResponse> GetCollectionAsync(CollectionRequest request)
@@ -973,7 +991,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         {
             Uri requestUrl = new Uri(BaseUrl, relativeUri);
 
-            for (int retry = 0; retry < 20; retry++)
+            for (int retry = 0; retry <= maxRetries; retry++)
             {
                 HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUrl);
                 HttpResponseMessage httpResponse = await this.http.SendAsync(httpRequest).ConfigureAwait(false);
@@ -986,7 +1004,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 
                 if (httpResponse.StatusCode == System.Net.HttpStatusCode.Accepted)
                 {
-                    await Task.Delay(500).ConfigureAwait(false);
+                    await Task.Delay(delayMs).ConfigureAwait(false);
                     continue;
                 }
 
