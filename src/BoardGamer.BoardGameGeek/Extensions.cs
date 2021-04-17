@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -54,12 +55,12 @@ namespace BoardGamer.BoardGameGeek
 
         public static double AttributeValueAsDouble(this XElement element, string attributeName = "value")
         {
-            return Double.TryParse(element.AttributeValue(attributeName), out double v) ? v : default(double);
+            return Double.TryParse(element.AttributeValue(attributeName), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double v) ? v : default(double);
         }
 
         public static double? AttributeValueAsNullableDouble(this XElement element, string attributeName = "value")
         {
-            return Double.TryParse(element.AttributeValue(attributeName), out double v) ? v : (double?)null;
+            return Double.TryParse(element.AttributeValue(attributeName), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double v) ? v : (double?)null;
         }
 
         public static int AttributeValueAsInt32(this XElement element, string attributeName = "value")
