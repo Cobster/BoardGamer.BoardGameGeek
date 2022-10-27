@@ -17,11 +17,6 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         private readonly int maxRetries;
         private readonly int delayMs;
 
-        public BoardGameGeekXmlApi2Client(HttpClient http)
-            : this(http, BoardGameGeekXmlApi2ClientOptions.Default)
-        {
-        }
-
         public BoardGameGeekXmlApi2Client(HttpClient http, BoardGameGeekXmlApi2ClientOptions options = null)
         {
             if (http == null)
