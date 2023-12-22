@@ -69,7 +69,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.NotNull(game.Thumbnail);
             Assert.NotNull(game.Image);
             Assert.Equal("Above and Below", game.Name);
-            Assert.Equal(6, game.AlternateNames.Count);
+            Assert.Equal(7, game.AlternateNames.Count);
             Assert.StartsWith("Your last village was ransacked by barbarians.", game.Description);
             Assert.Equal(2015, game.YearPublished);
             Assert.Equal(2, game.MinPlayers);
@@ -79,8 +79,8 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.Equal(90, game.MaxPlayingTime);
             Assert.Equal(13, game.MinAge);
             Assert.Equal(3, game.Polls.Count);
-            Assert.Equal(43, game.Links.Count);
-            Assert.Equal(9, game.Versions.Count);
+            Assert.Equal(54, game.Links.Count);
+            Assert.Equal(10, game.Versions.Count);
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             ThingResponse.Item game = response.Result.First();
 
             Assert.Equal(15, game.Videos.Count);
-            Assert.Equal(103, game.Videos.Total);
+            Assert.Equal(126, game.Videos.Total);
 
             ThingResponse.Video video = game.Videos[5];
 
@@ -170,10 +170,10 @@ namespace BoardGamer.BoardGameGeek.Tests
 
             Assert.Equal(new DateTimeOffset(2016, 1, 16, 20, 08, 34, 0, TimeSpan.FromHours(0)), listing.ListDate);
             Assert.Equal("EUR", listing.Currency);
-            Assert.Equal(51.95, listing.Price);
+            Assert.Equal(55.99, listing.Price);
             Assert.Equal("new", listing.Condition);
             Assert.Equal("weight: 1760 grams + packaging", listing.Notes);
-            Assert.Equal("https://boardgamegeek.com/geekmarket/product/869188", listing.Link);
+            Assert.Equal("https://boardgamegeek.com/market/product/869188", listing.Link);
 
         }
 
@@ -197,7 +197,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.Equal(1, game.MinPlayers);
             Assert.Equal(1, game.MaxPlayers);
             Assert.Equal(15, game.Links.Count);
-            Assert.Equal(16, game.Versions.Count);
+            Assert.Equal(17, game.Versions.Count);
 
             // could be interesting.
         }
