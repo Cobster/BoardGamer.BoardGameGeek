@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -11,7 +11,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 {
     public class BoardGameGeekXmlApi2Client : IBoardGameGeekXmlApi2Client
     {
-        public static readonly Uri BaseUrl = new Uri("https://www.boardgamegeek.com/xmlapi2/");
+        public static readonly Uri BaseUrl = new Uri("https://boardgamegeek.com/xmlapi2/");
 
         private readonly HttpClient http;
         private readonly int maxRetries;
