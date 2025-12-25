@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -993,8 +993,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 
                 if (!httpResponse.IsSuccessStatusCode)
                 {
-                    // error occurred handle it
-                    throw new Exception("An error occurred.");
+                    throw new HttpRequestException($"BGG request failed with: {httpResponse.StatusCode}");
                 }
 
                 if (httpResponse.StatusCode == System.Net.HttpStatusCode.Accepted)
