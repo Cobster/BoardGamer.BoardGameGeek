@@ -28,13 +28,14 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             {
                 options = BoardGameGeekXmlApi2ClientOptions.Default;
             }
-            if (options.AuthorizationToken == null)
-            {
-                throw new ArgumentException(nameof(options), "An AuthorizationToken is required to access the API. See https://boardgamegeek.com/using_the_xml_api");
-            }
-
+            
             this.http = http;
-            this.http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.AuthorizationToken);
+            
+            if (options.AuthorizationToken != null)
+            {
+                this.http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.AuthorizationToken);    
+            }
+            
             this.maxRetries = options.MaxRetries >= 0 ? options.MaxRetries : 0;
             this.delayMs = options.Delay >= TimeSpan.Zero ? Convert.ToInt32(options.Delay.TotalMilliseconds) : 0;
         }
@@ -999,6 +1000,11 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 
                 if (!httpResponse.IsSuccessStatusCode)
                 {
+                    if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        throw new HttpRequestException($"The boardgamegeek xml api requires an authorization token is for access. See https://boardgamegeek.com/using_the_xml_api StatusCode = {httpResponse.StatusCode}");
+                    }
+
                     throw new HttpRequestException($"The boardgamegeek xml api request failed. StatusCode = {httpResponse.StatusCode}");
                 }
 
