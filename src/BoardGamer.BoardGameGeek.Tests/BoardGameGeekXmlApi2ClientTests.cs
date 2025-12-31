@@ -15,7 +15,7 @@ namespace BoardGamer.BoardGameGeek.Tests
 
         public BoardGameGeekClientTests()
         {
-            bgg = new BoardGameGeekXmlApi2Client(new HttpClient());
+            bgg = new BoardGameGeekXmlApi2Client(new HttpClient(), new BoardGameGeekXmlApi2ClientOptions { AuthorizationToken = Environment.GetEnvironmentVariable("BGG_AUTH_TOKEN") });
         }
 
         [Fact]

@@ -18,6 +18,11 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
         /// <summary>
         /// The maximum number of times to try a request.
         /// </summary>
-        public int MaxRetries { get; set; }        
+        public int MaxRetries { get; set; }
+
+        /// <summary>
+        /// A token required to access the api.
+        /// </summary>
+        public string AuthorizationToken { get; set; }
     }
 }

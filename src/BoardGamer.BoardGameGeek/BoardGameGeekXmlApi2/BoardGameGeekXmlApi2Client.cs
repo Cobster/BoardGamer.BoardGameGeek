@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -11,7 +12,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 {
     public class BoardGameGeekXmlApi2Client : IBoardGameGeekXmlApi2Client
     {
-        public static readonly Uri BaseUrl = new Uri("https://www.boardgamegeek.com/xmlapi2/");
+        public static readonly Uri BaseUrl = new Uri("https://boardgamegeek.com/xmlapi2/");
 
         private readonly HttpClient http;
         private readonly int maxRetries;
@@ -27,8 +28,13 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
             {
                 options = BoardGameGeekXmlApi2ClientOptions.Default;
             }
+            if (options.AuthorizationToken == null)
+            {
+                throw new ArgumentException(nameof(options), "An AuthorizationToken is required to access the API. See https://boardgamegeek.com/using_the_xml_api");
+            }
 
             this.http = http;
+            this.http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.AuthorizationToken);
             this.maxRetries = options.MaxRetries >= 0 ? options.MaxRetries : 0;
             this.delayMs = options.Delay >= TimeSpan.Zero ? Convert.ToInt32(options.Delay.TotalMilliseconds) : 0;
         }
@@ -993,8 +999,7 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
 
                 if (!httpResponse.IsSuccessStatusCode)
                 {
-                    // error occurred handle it
-                    throw new Exception("An error occurred.");
+                    throw new HttpRequestException($"The boardgamegeek xml api request failed. StatusCode = {httpResponse.StatusCode}");
                 }
 
                 if (httpResponse.StatusCode == System.Net.HttpStatusCode.Accepted)

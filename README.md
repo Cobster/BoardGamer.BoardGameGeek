@@ -1,4 +1,6 @@
-# BoardGamer.BoardGameGeek
+![Powered by BGG](./.github/assets/powered-by-bgg-rgb.svg)
+
+# BoardGamer.BoardGameGeek 
 
 A .NET library for interacting with the BGG XML API2 made available on boardgamegeek.com.
 
@@ -25,6 +27,15 @@ dotnet add package BoardGamer.BoardGameGeek
 ```
 
 ## Setup
+
+> [!IMPORTANT]
+> As of July 2nd, 2025, the BoardGameGeek XML APIs require registration and authorization.
+>
+> See [Using the XML API](https://boardgamegeek.com/using_the_xml_api).
+>
+> Once you receive authorization for your application from BoardGameGeek, you can create an API token, 
+> and supply it to the BoardGameGeekXmlApi2Client constructor via the `BoardGameGeekXmlApi2ClientOptions.AuthorizationToken`.
+
 
 This library was intended to be used in conjunction with HttpClientFactory as a Typed client within an ASP.NET Core web appllication.
 
@@ -107,8 +118,6 @@ BoardGameGeekXmlApi2ClientOptions customOptions = new BoardGameGeekXmlApi2Client
 IBoardGameGeekXmlApi2Client bgg = new BoardGameGeekXmlApi2Client(new HttpClient(), customOptions);
 
 ```
-
-
 
 ### Get a user's game collection including stats for each game
 
