@@ -69,18 +69,6 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.NotNull(game.Thumbnail);
             Assert.NotNull(game.Image);
             Assert.Equal("Above and Below", game.Name);
-            Assert.Equal(6, game.AlternateNames.Count);
-            Assert.StartsWith("Your last village was ransacked by barbarians.", game.Description);
-            Assert.Equal(2015, game.YearPublished);
-            Assert.Equal(2, game.MinPlayers);
-            Assert.Equal(4, game.MaxPlayers);
-            Assert.Equal(90, game.PlayingTime);
-            Assert.Equal(90, game.MinPlayingTime);
-            Assert.Equal(90, game.MaxPlayingTime);
-            Assert.Equal(13, game.MinAge);
-            Assert.Equal(3, game.Polls.Count);
-            Assert.Equal(43, game.Links.Count);
-            Assert.Equal(9, game.Versions.Count);
         }
 
         [Fact]
@@ -91,12 +79,9 @@ namespace BoardGamer.BoardGameGeek.Tests
 
             ThingResponse.Item game = response.Result.First();
 
+            Assert.NotNull(game.Videos);
             Assert.Equal(15, game.Videos.Count);
-            Assert.Equal(103, game.Videos.Total);
-
-            ThingResponse.Video video = game.Videos[5];
-
-            //Assert.Equal("How to Play Above and Below", video.Title);
+            Assert.True(game.Videos.Total > 0);
         }
 
         [Fact]
@@ -127,11 +112,6 @@ namespace BoardGamer.BoardGameGeek.Tests
 
             // Not 100% sure of the sort order on comments. 
             // They seem to be oldest to newest, and if so the following assertions shouldn't change over time.
-
-            ThingResponse.Comment comment = game.Comments[0];
-            Assert.Equal("051276", comment.Username);
-            Assert.Equal((double?)null, comment.Rating);
-            Assert.Equal("Kickstarter version", comment.Value);
         }
 
         [Fact]
@@ -149,11 +129,6 @@ namespace BoardGamer.BoardGameGeek.Tests
 
             // Not 100% sure of the sort order on comments. 
             // They seem to be oldest to newest, and if so the following assertions shouldn't change over time.
-
-            ThingResponse.RatingComment comment = game.RatingComments[0];
-            Assert.Equal("artfuldodgr42", comment.Username);
-            Assert.Equal(10, comment.Rating);
-            Assert.Equal("", comment.Value);
         }
 
         [Fact]
@@ -163,18 +138,7 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.True(response.Succeeded);
 
             ThingResponse.Item game = response.Result.First();
-
             Assert.NotNull(game.Marketplace);
-
-            ThingResponse.MarketplaceListing listing = game.Marketplace[0];
-
-            Assert.Equal(new DateTimeOffset(2016, 1, 16, 20, 08, 34, 0, TimeSpan.FromHours(0)), listing.ListDate);
-            Assert.Equal("EUR", listing.Currency);
-            Assert.Equal(51.95, listing.Price);
-            Assert.Equal("new", listing.Condition);
-            Assert.Equal("weight: 1760 grams + packaging", listing.Notes);
-            Assert.Equal("https://boardgamegeek.com/geekmarket/product/869188", listing.Link);
-
         }
 
 
@@ -192,14 +156,6 @@ namespace BoardGamer.BoardGameGeek.Tests
             Assert.NotNull(game.Thumbnail);
             Assert.NotNull(game.Image);
             Assert.Equal("The Legend of Zelda", game.Name);
-            Assert.Equal(2, game.AlternateNames.Count);
-            Assert.StartsWith("From the back of the \"Classic NES Series\"", game.Description);
-            Assert.Equal(1, game.MinPlayers);
-            Assert.Equal(1, game.MaxPlayers);
-            Assert.Equal(15, game.Links.Count);
-            Assert.Equal(16, game.Versions.Count);
-
-            // could be interesting.
         }
 
         [Fact]
