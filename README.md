@@ -34,7 +34,6 @@ dotnet add package BoardGamer.BoardGameGeek
 > See [Using the XML API](https://boardgamegeek.com/using_the_xml_api).
 >
 > Once you receive authorization for your application from BoardGameGeek and create an API token.
-> You can supply it one of the following two ways when creating a client.
 >
 > **v0.9.0** and later
 >
@@ -46,16 +45,6 @@ dotnet add package BoardGamer.BoardGameGeek
 >     });
 > ```
 >
-> **Any Version**
->
-> ```
-> var http = new HttpClient();
-> var http.DefaultRequestHeaders.Authorization = 
->     new AuthenticationHeaderValue("Bearer", "__YOUR_AUTH_TOKEN_GOES_HERE__");
-> var bgg = new BoardGameGeekXmlApiClient(http);
-> ```
->
-
 
 This library was intended to be used in conjunction with HttpClientFactory as a Typed client within an ASP.NET Core web appllication.
 
