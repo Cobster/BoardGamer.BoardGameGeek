@@ -1002,10 +1002,10 @@ namespace BoardGamer.BoardGameGeek.BoardGameGeekXmlApi2
                 {
                     if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        throw new HttpRequestException($"The boardgamegeek xml api requires an authorization token is for access. See https://boardgamegeek.com/using_the_xml_api StatusCode = {httpResponse.StatusCode}");
+                        throw new BoardGameGeekHttpException($"The boardgamegeek xml api requires an authorization token is for access. See https://boardgamegeek.com/using_the_xml_api StatusCode = {httpResponse.StatusCode}", httpResponse.StatusCode);
                     }
 
-                    throw new HttpRequestException($"The boardgamegeek xml api request failed. StatusCode = {httpResponse.StatusCode}");
+                    throw new BoardGameGeekHttpException($"The boardgamegeek xml api request failed. StatusCode = {httpResponse.StatusCode}", httpResponse.StatusCode);
                 }
 
                 if (httpResponse.StatusCode == System.Net.HttpStatusCode.Accepted)
